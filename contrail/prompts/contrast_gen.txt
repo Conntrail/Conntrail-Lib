@@ -1,0 +1,19 @@
+You are generating contrast inputs for routing analysis.
+
+Given the following agent input, produce exactly 3 variants as JSON.
+
+Original input: {input}
+
+Rules:
+- similar: same intent and meaning, different words. Do NOT change urgency, sentiment or emphasis.
+- neutral: remove all urgency, sentiment and emphasis. Keep only the core factual request.
+- opposite: invert the key dimension (urgency → routine, escalate → deprioritise, etc.)
+
+All variants must be plausible real user inputs. Do not add explanations.
+
+Respond ONLY with this JSON, no other text:
+{{
+  "similar": "...",
+  "neutral": "...",
+  "opposite": "..."
+}}
