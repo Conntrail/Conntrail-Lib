@@ -2,14 +2,14 @@
 Adaptive RAG Agent — adapted from langchain-ai/langgraph examples.
 
 Routes to: direct_answer | vector_search | web_search
-This is the Contrail test harness version with an in-memory vector store.
+Provider-agnostic: works with Groq, Anthropic, or OpenAI.
 
 Source: https://github.com/langchain-ai/langgraph/blob/main/examples/rag/langgraph_adaptive_rag.ipynb
 """
-import os
+from __future__ import annotations
+
 from typing import Literal, TypedDict
 
-from langchain_anthropic import ChatAnthropic
 from langchain_core.documents import Document
 from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.graph import END, START, StateGraph
@@ -33,28 +33,19 @@ FIXTURE_DOCS = [
 
 
 def _simple_search(query: str, docs: list[Document], top_k: int = 2) -> list[str]:
-    """Naive keyword overlap search (no embeddings needed for test harness)."""
     query_words = set(query.lower().split())
-    scored = []
-    for doc in docs:
-        doc_words = set(doc.page_content.lower().split())
-        score = len(query_words & doc_words)
-        scored.append((score, doc.page_content))
+    scored = [(len(query_words & set(d.page_content.lower().split())), d.page_content) for d in docs]
     scored.sort(key=lambda x: x[0], reverse=True)
     return [content for _, content in scored[:top_k]]
 
 
 def _get_llm():
-    return ChatAnthropic(
-        model="claude-haiku-4-5-20251001",
-        api_key=os.getenv("ANTHROPIC_API_KEY"),
-        max_tokens=512,
-    )
+    from testing.harness.llm import get_llm
+    return get_llm()
 
 
 # --- Router node ---
 async def route_query(state: RAGState) -> RAGState:
-    """Determine retrieval strategy for the query."""
     llm = _get_llm()
     response = await llm.ainvoke([
         SystemMessage(content="""Select a retrieval strategy for this query. Respond with only the strategy name.
@@ -77,9 +68,7 @@ def select_strategy(state: RAGState) -> Literal["direct_answer", "vector_search"
 
 # --- Handler nodes ---
 async def direct_answer(state: RAGState) -> RAGState:
-    """Answer directly from LLM knowledge."""
-    llm = _get_llm()
-    response = await llm.ainvoke([
+    response = await _get_llm().ainvoke([
         SystemMessage(content="Answer the question directly from your knowledge."),
         HumanMessage(content=state["query"]),
     ])
@@ -87,11 +76,9 @@ async def direct_answer(state: RAGState) -> RAGState:
 
 
 async def vector_search(state: RAGState) -> RAGState:
-    """Search internal document fixtures."""
     docs = _simple_search(state["query"], FIXTURE_DOCS)
-    llm = _get_llm()
     context = "\n".join(docs) if docs else "No relevant documents found."
-    response = await llm.ainvoke([
+    response = await _get_llm().ainvoke([
         SystemMessage(content=f"Answer based on these internal documents:\n\n{context}"),
         HumanMessage(content=state["query"]),
     ])
@@ -99,11 +86,8 @@ async def vector_search(state: RAGState) -> RAGState:
 
 
 async def web_search(state: RAGState) -> RAGState:
-    """Simulate web search (returns placeholder in test harness)."""
-    # In a real agent this would call Tavily or similar
     simulated_result = f"[Web search placeholder for: {state['query']}]"
-    llm = _get_llm()
-    response = await llm.ainvoke([
+    response = await _get_llm().ainvoke([
         SystemMessage(content="You searched the web. Provide a helpful response based on typical web results."),
         HumanMessage(content=state["query"]),
     ])
@@ -112,7 +96,6 @@ async def web_search(state: RAGState) -> RAGState:
 
 # --- Graph builder ---
 def build_graph():
-    """Build and compile the adaptive RAG graph."""
     builder = StateGraph(RAGState)
 
     builder.add_node("route_query", route_query)

@@ -1,0 +1,70 @@
+======================================================================
+CONTRAIL — Phase 0 Smoke Test
+Timestamp : 2026-03-15 08:45:42
+Provider  : GROQ
+======================================================================
+
+======================================================================
+AGENT 1: Customer Support (4-way routing)
+======================================================================
+  [PASS] Input: 'I want a full refund, my order arrived broken!'
+         Category: refund (expected: refund)
+         Response: I'm so sorry to hear that your order arrived broken. I'm here to help you with a refund. To process ...
+  [PASS] Input: 'I need to speak to a manager RIGHT NOW, this is outrage'
+         Category: escalation (expected: escalation)
+         Response: I can see that you're really upset, and I apologize if we've fallen short of your expectations in an...
+  [PASS] Input: "Where is my order #98765? It's been 5 days."
+         Category: order_info (expected: order_info)
+         Response: I've checked on the status of your order #98765. According to our system, your order was shipped 3 d...
+  [PASS] Input: 'What are your store opening hours?'
+         Category: general (expected: general)
+         Response: I'm happy to help, but I'm a large language model, I don't have a physical store. I exist solely as ...
+
+======================================================================
+AGENT 2: ReAct Agent (tool-selection routing)
+======================================================================
+  [PASS] Input: 'What is 144 / 12?'
+         Path taken: calculator (expected: calculator)
+         Answer: The answer is 12.0.
+  [PASS] Input: 'What is the capital of France?'
+         Path taken: direct (expected: direct)
+         Answer: The capital of France is Paris.
+
+======================================================================
+AGENT 3: Multi-Agent Supervisor (specialist routing)
+======================================================================
+  [PASS] Task: 'Write a Python function to sort a list of dictionaries '
+         Assigned to: code_agent (expected: code_agent)
+         Result: **Sorting a List of Dictionaries by a Key**
+==========================================
+
+Here's a Pyt...
+  [PASS] Task: 'Write a professional email to decline a job offer polit'
+         Assigned to: writing_agent (expected: writing_agent)
+         Result: Subject: Declining Job Offer for [Position]
+
+Dear [Hiring Manager's Name],
+
+I am writing to express ...
+
+======================================================================
+AGENT 4: Adaptive RAG (retrieval strategy routing)
+======================================================================
+  [PASS] Query: 'What was Q4 2024 sales performance?'
+         Strategy: vector_search (expected: vector_search)
+         Answer: Contrail's Q4 2024 sales increased by 23% year-over-year....
+  [PASS] Query: 'What is the boiling point of water?'
+         Strategy: direct_answer (expected: direct_answer)
+         Answer: The boiling point of water is 212°F (100°C) at standard atmospheric pressure....
+
+======================================================================
+SUMMARY
+======================================================================
+  [PASS] customer_support
+  [PASS] react_agent
+  [PASS] multi_agent_supervisor
+  [PASS] adaptive_rag
+
+  4/4 agents fully matched expected routes
+  (WARN = agent ran but routed differently than expected — LLM variance is normal)
+======================================================================

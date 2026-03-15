@@ -2,14 +2,14 @@
 Multi-Agent Supervisor — adapted from langchain-ai/langgraph examples.
 
 Supervisor routes to: code_agent | writing_agent | research_agent
-This is the Contrail test harness version.
+Provider-agnostic: works with Groq, Anthropic, or OpenAI.
 
 Source: https://github.com/langchain-ai/langgraph/tree/main/examples/multi_agent_supervisor
 """
-import os
+from __future__ import annotations
+
 from typing import Literal, TypedDict
 
-from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.graph import END, START, StateGraph
 
@@ -21,16 +21,12 @@ class SupervisorState(TypedDict):
 
 
 def _get_llm():
-    return ChatAnthropic(
-        model="claude-haiku-4-5-20251001",
-        api_key=os.getenv("ANTHROPIC_API_KEY"),
-        max_tokens=512,
-    )
+    from testing.harness.llm import get_llm
+    return get_llm()
 
 
 # --- Supervisor node ---
 async def supervisor_node(state: SupervisorState) -> SupervisorState:
-    """Route the task to the appropriate specialist agent."""
     llm = _get_llm()
     response = await llm.ainvoke([
         SystemMessage(content="""You are a supervisor that routes tasks to specialists.
@@ -54,8 +50,7 @@ def route_to_agent(state: SupervisorState) -> Literal["code_agent", "writing_age
 
 # --- Specialist nodes ---
 async def code_agent(state: SupervisorState) -> SupervisorState:
-    llm = _get_llm()
-    response = await llm.ainvoke([
+    response = await _get_llm().ainvoke([
         SystemMessage(content="You are an expert Python developer. Write clean, well-documented code."),
         HumanMessage(content=state["task"]),
     ])
@@ -63,8 +58,7 @@ async def code_agent(state: SupervisorState) -> SupervisorState:
 
 
 async def writing_agent(state: SupervisorState) -> SupervisorState:
-    llm = _get_llm()
-    response = await llm.ainvoke([
+    response = await _get_llm().ainvoke([
         SystemMessage(content="You are an expert writer. Write clear, engaging prose."),
         HumanMessage(content=state["task"]),
     ])
@@ -72,8 +66,7 @@ async def writing_agent(state: SupervisorState) -> SupervisorState:
 
 
 async def research_agent(state: SupervisorState) -> SupervisorState:
-    llm = _get_llm()
-    response = await llm.ainvoke([
+    response = await _get_llm().ainvoke([
         SystemMessage(content="You are a research specialist. Provide accurate, well-sourced information."),
         HumanMessage(content=state["task"]),
     ])
@@ -82,7 +75,6 @@ async def research_agent(state: SupervisorState) -> SupervisorState:
 
 # --- Graph builder ---
 def build_graph():
-    """Build and compile the multi-agent supervisor graph."""
     builder = StateGraph(SupervisorState)
 
     builder.add_node("supervisor", supervisor_node)

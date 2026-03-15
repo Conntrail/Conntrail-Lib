@@ -10,10 +10,11 @@ Rules:
 - opposite: invert the key dimension (urgency → routine, escalate → deprioritise, etc.)
 
 All variants must be plausible real user inputs. Do not add explanations.
+Each value must be a plain string — no nested objects, no extra keys.
 
-Respond ONLY with this JSON, no other text:
+Respond ONLY with valid JSON, no other text:
 {{
-  "similar": "...",
-  "neutral": "...",
-  "opposite": "..."
+  "similar": "write the similar variant here as a plain string",
+  "neutral": "write the neutral variant here as a plain string",
+  "opposite": "write the opposite variant here as a plain string"
 }}

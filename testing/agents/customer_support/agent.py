@@ -2,14 +2,15 @@
 Customer Support Agent — adapted from langchain-ai/langgraph examples.
 
 Routes incoming queries to: refund | escalation | order_info | general
-This is the Contrail test harness version — trimmed to routing-relevant logic.
+Provider-agnostic: works with Groq, Anthropic, or OpenAI.
 
 Source: https://github.com/langchain-ai/langgraph/tree/main/examples/customer-support
 """
+from __future__ import annotations
+
 import os
 from typing import Literal, TypedDict
 
-from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.graph import END, START, StateGraph
 
@@ -20,13 +21,9 @@ class SupportState(TypedDict):
     response: str | None
 
 
-# --- LLM setup ---
 def _get_llm():
-    return ChatAnthropic(
-        model="claude-haiku-4-5-20251001",
-        api_key=os.getenv("ANTHROPIC_API_KEY"),
-        max_tokens=512,
-    )
+    from testing.harness.llm import get_llm
+    return get_llm()
 
 
 # --- Routing node ---
@@ -51,14 +48,12 @@ Categories:
 
 
 def route_query(state: SupportState) -> Literal["handle_refund", "handle_escalation", "handle_order_info", "handle_general"]:
-    """Conditional edge: route based on classification."""
     return f"handle_{state['category']}"
 
 
 # --- Handler nodes ---
 async def handle_refund(state: SupportState) -> SupportState:
-    llm = _get_llm()
-    response = await llm.ainvoke([
+    response = await _get_llm().ainvoke([
         SystemMessage(content="You handle refund requests. Be helpful and process-oriented."),
         HumanMessage(content=state["message"]),
     ])
@@ -66,8 +61,7 @@ async def handle_refund(state: SupportState) -> SupportState:
 
 
 async def handle_escalation(state: SupportState) -> SupportState:
-    llm = _get_llm()
-    response = await llm.ainvoke([
+    response = await _get_llm().ainvoke([
         SystemMessage(content="You handle escalations. Be empathetic and de-escalate."),
         HumanMessage(content=state["message"]),
     ])
@@ -75,8 +69,7 @@ async def handle_escalation(state: SupportState) -> SupportState:
 
 
 async def handle_order_info(state: SupportState) -> SupportState:
-    llm = _get_llm()
-    response = await llm.ainvoke([
+    response = await _get_llm().ainvoke([
         SystemMessage(content="You handle order inquiries. Be precise and informative."),
         HumanMessage(content=state["message"]),
     ])
@@ -84,8 +77,7 @@ async def handle_order_info(state: SupportState) -> SupportState:
 
 
 async def handle_general(state: SupportState) -> SupportState:
-    llm = _get_llm()
-    response = await llm.ainvoke([
+    response = await _get_llm().ainvoke([
         SystemMessage(content="You handle general support queries. Be friendly and helpful."),
         HumanMessage(content=state["message"]),
     ])
@@ -94,7 +86,6 @@ async def handle_general(state: SupportState) -> SupportState:
 
 # --- Graph builder ---
 def build_graph():
-    """Build and compile the customer support graph."""
     builder = StateGraph(SupportState)
 
     builder.add_node("classify_query", classify_query)
