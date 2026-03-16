@@ -2,8 +2,12 @@
 Phase 6 integration tests — Contrail against all 4 real agents.
 
 These run after Phase 5 is complete (NodeInterceptor + Public API).
-Tests the full 6-test matrix: non-intrusion, trace completeness, entropy
-calibration, attribution plausibility, latency overhead, JSONL round-trip.
+Tests the full 7-test matrix: non-intrusion, trace completeness, entropy
+calibration, attribution plausibility, latency overhead, JSONL round-trip,
+and prompt quality audit.
+
+The prompt quality audit (TestPromptQualityAudit) only requires Phase 3
+and runs independently of trace_graph — it can run now.
 """
 import asyncio
 import json
@@ -264,3 +268,127 @@ class TestJSONLRoundTrip:
                     assert_trace_record(reconstructed)
                     assert reconstructed.node_id == record_dict["node_id"]
                     assert abs(reconstructed.entropy_score - record_dict["entropy_score"]) < 1e-9
+
+
+# ---------------------------------------------------------------------------
+# Prompt Quality Audit — requires Phase 3 only, no trace_graph needed
+# ---------------------------------------------------------------------------
+
+@pytest.mark.integration
+class TestPromptQualityAudit:
+    """
+    Contrail as a prompt quality tool.
+
+    Runs the same fixture inputs through two versions of the customer_support
+    routing node — one with a weak vague prompt, one with our strong explicit
+    prompt — and asserts that the strong prompt produces lower mean entropy.
+
+    High entropy on an "obvious" input = the prompt is under-specified.
+    Attribution breakdown reveals which dimension the prompt is sensitive to:
+      - neutral flips  → prompt relies on tone, not intent  (emotion-sensitive)
+      - similar flips  → prompt reacts to word choice       (surface-form brittle)
+      - opposite flips → genuine boundary                   (expected, healthy)
+    """
+
+    # 3 inputs: clear, ambiguous, and borderline — enough for a statistical signal
+    # Kept small to stay within Groq free-tier RPM limits (30 RPM)
+    AUDIT_INPUTS = [
+        "I need a refund immediately, my order never arrived!",
+        "I want to speak to a manager right now.",
+        "I have an issue with something I purchased.",   # deliberately ambiguous
+    ]
+
+    @pytest.fixture(autouse=True)
+    def require_api_key(self):
+        import os
+        if not any(os.getenv(k) for k in ("GROQ_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY")):
+            pytest.skip("No API key available")
+
+    def _make_weak_node(self):
+        """Routing node with a vague prompt — no category definitions."""
+        from langchain_core.messages import HumanMessage, SystemMessage
+        from testing.harness.llm import get_llm
+
+        async def weak_classify(state):
+            llm = get_llm()
+            response = await llm.ainvoke([
+                SystemMessage(content="You are a customer support assistant. Classify this customer message into a category. Respond with only the category name."),
+                HumanMessage(content=state["message"]),
+            ])
+            return {**state, "category": response.content.strip().lower()}
+
+        return weak_classify
+
+    def _make_strong_node(self):
+        """Routing node with explicit category definitions — our production prompt."""
+        from testing.agents.customer_support.agent import classify_query
+        return classify_query
+
+    async def _score_node(self, node, input_text, gen, analyser):
+        """Run one input through a node and return its entropy score."""
+        from contrail.contrast import ContrastGenerator
+        contrasts = await gen.generate(input_text)
+        result = await analyser.analyse(
+            node,
+            {"message": input_text, "category": None, "response": None},
+            contrasts,
+        )
+        return result.entropy_score, result.attribution_dimension, result.contrast_routes
+
+    @pytest.mark.asyncio
+    async def test_prompt_quality_audit(self):
+        """
+        Single-pass audit: iterate inputs once, collect entropy + attribution
+        for both weak and strong prompts, then assert both properties.
+
+        Combined into one test to stay within Groq free-tier 30 RPM limit —
+        two separate tests would each make 24 node calls (48 total > 30 RPM).
+        """
+        from collections import Counter
+
+        from contrail.analyser import DivergenceAnalyser
+        from contrail.contrast import ContrastGenerator
+        from testing.harness.llm import get_contrast_llm
+
+        gen = ContrastGenerator(llm=get_contrast_llm())
+        analyser = DivergenceAnalyser()
+        weak_node = self._make_weak_node()
+        strong_node = self._make_strong_node()
+
+        weak_scores, strong_scores = [], []
+        weak_attrs, strong_attrs = Counter(), Counter()
+
+        for input_text in self.AUDIT_INPUTS:
+            w_entropy, w_attr, _ = await self._score_node(weak_node, input_text, gen, analyser)
+            await asyncio.sleep(3)  # respect Groq free-tier RPM limit
+            s_entropy, s_attr, _ = await self._score_node(strong_node, input_text, gen, analyser)
+            await asyncio.sleep(3)
+            weak_scores.append(w_entropy)
+            strong_scores.append(s_entropy)
+            weak_attrs[w_attr] += 1
+            strong_attrs[s_attr] += 1
+
+        weak_mean = sum(weak_scores) / len(weak_scores)
+        strong_mean = sum(strong_scores) / len(strong_scores)
+        strong_stable = strong_attrs.get("none detected", 0)
+        weak_stable = weak_attrs.get("none detected", 0)
+
+        print(f"\n  Weak scores:   {[f'{s:.3f}' for s in weak_scores]}  mean={weak_mean:.3f}")
+        print(f"  Strong scores: {[f'{s:.3f}' for s in strong_scores]}  mean={strong_mean:.3f}")
+        print(f"  Weak prompt attribution breakdown:   {dict(weak_attrs)}")
+        print(f"  Strong prompt attribution breakdown: {dict(strong_attrs)}")
+        print(f"  Stable decisions — weak: {weak_stable}, strong: {strong_stable}")
+
+        # Assertion 1: strong prompt produces lower mean entropy
+        assert strong_mean < weak_mean, (
+            f"Strong prompt mean entropy ({strong_mean:.3f}) should be lower than "
+            f"weak prompt mean entropy ({weak_mean:.3f}).\n"
+            f"Weak scores:   {[f'{s:.3f}' for s in weak_scores]}\n"
+            f"Strong scores: {[f'{s:.3f}' for s in strong_scores]}"
+        )
+
+        # Assertion 2: strong prompt has >= stable (none detected) decisions
+        assert strong_stable >= weak_stable, (
+            f"Strong prompt should have >= stable decisions as weak prompt.\n"
+            f"Weak: {dict(weak_attrs)}\nStrong: {dict(strong_attrs)}"
+        )
