@@ -10,7 +10,7 @@ A multi-route customer support agent that classifies incoming queries and routes
 - `handle_order_info` — order status or tracking
 - `handle_general` — all other queries
 
-## Why it's a good Contrail test subject
+## Why it's a good Conntrail test subject
 
 Clear routing with 4 distinct branches. "Urgency" and "sentiment" are the primary attribution dimensions. Easy to construct confident / boundary / fragile inputs.
 

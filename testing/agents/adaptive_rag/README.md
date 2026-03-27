@@ -9,9 +9,9 @@ An adaptive retrieval agent that selects its retrieval strategy based on query t
 - `vector_search` — semantic search over a local document store
 - `web_search` — current events, recent data, or external information
 
-## Why it's a good Contrail test subject
+## Why it's a good Conntrail test subject
 
-Retrieval strategy routing has clear semantic dimensions (recency, specificity, domain). The boundary between "answer from knowledge" and "search documents" is a useful ambiguity for Contrail to analyse.
+Retrieval strategy routing has clear semantic dimensions (recency, specificity, domain). The boundary between "answer from knowledge" and "search documents" is a useful ambiguity for Conntrail to analyse.
 
 ## Note on document store
 

@@ -54,7 +54,12 @@ def _available_provider() -> str:
     )
 
 
-def get_chat_model(model: str, *, max_tokens: int = 512) -> BaseChatModel:
+def get_chat_model(
+    model: str,
+    *,
+    max_tokens: int = 512,
+    temperature: float = 0.0,
+) -> BaseChatModel:
     """
     Resolve a model string to a LangChain BaseChatModel instance.
 
@@ -65,6 +70,8 @@ def get_chat_model(model: str, *, max_tokens: int = 512) -> BaseChatModel:
     Args:
         model: Model ID string e.g. "llama-3.1-8b-instant", "claude-haiku-4-5-20251001"
         max_tokens: Max tokens for the response.
+        temperature: Sampling temperature. Defaults to 0.0 for deterministic
+            contrast generation — random contrast variation adds noise, not signal.
 
     Returns:
         A configured LangChain BaseChatModel.
@@ -80,20 +87,20 @@ def get_chat_model(model: str, *, max_tokens: int = 512) -> BaseChatModel:
         resolved_provider = _available_provider()
         resolved_model = _FALLBACK_MODELS[resolved_provider]
 
-    return _build_model(resolved_provider, resolved_model, max_tokens=max_tokens)
+    return _build_model(resolved_provider, resolved_model, max_tokens=max_tokens, temperature=temperature)
 
 
-def _build_model(provider: str, model: str, *, max_tokens: int) -> BaseChatModel:
+def _build_model(provider: str, model: str, *, max_tokens: int, temperature: float = 0.0) -> BaseChatModel:
     if provider == "groq":
         from langchain_groq import ChatGroq
-        return ChatGroq(model=model, max_tokens=max_tokens)
+        return ChatGroq(model=model, max_tokens=max_tokens, temperature=temperature)
 
     if provider == "anthropic":
         from langchain_anthropic import ChatAnthropic
-        return ChatAnthropic(model=model, max_tokens=max_tokens)  # type: ignore[call-arg]
+        return ChatAnthropic(model=model, max_tokens=max_tokens, temperature=temperature)  # type: ignore[call-arg]
 
     if provider == "openai":
         from langchain_openai import ChatOpenAI
-        return ChatOpenAI(model=model, max_tokens=max_tokens)
+        return ChatOpenAI(model=model, max_tokens=max_tokens, temperature=temperature)
 
     raise ValueError(f"Unknown provider: {provider!r}")

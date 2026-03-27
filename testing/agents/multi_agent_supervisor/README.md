@@ -11,7 +11,7 @@ A supervisor agent that routes tasks to specialist sub-agents:
 
 The supervisor uses LLM-based routing to select the right specialist.
 
-## Why it's a good Contrail test subject
+## Why it's a good Conntrail test subject
 
 Hierarchical routing is a pattern with genuinely ambiguous boundaries (e.g. "document this code" — code_agent or writing_agent?). Good for testing multi-dimensional attribution (task_type, domain, formality).
 

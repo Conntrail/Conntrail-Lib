@@ -24,7 +24,7 @@ class RAGState(TypedDict):
 
 # --- In-memory document fixture ---
 FIXTURE_DOCS = [
-    Document(page_content="Contrail Q4 2024 sales increased 23% year-over-year.", metadata={"source": "q4_report"}),
+    Document(page_content="Conntrail Q4 2024 sales increased 23% year-over-year.", metadata={"source": "q4_report"}),
     Document(page_content="Customer churn decreased from 8% to 5% after the loyalty programme launch.", metadata={"source": "churn_analysis"}),
     Document(page_content="The engineering team shipped 12 features in Q3 2024.", metadata={"source": "eng_report"}),
     Document(page_content="EMEA expansion plans are on track for H1 2025.", metadata={"source": "strategy_doc"}),

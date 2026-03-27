@@ -1,5 +1,5 @@
 """
-Pytest configuration for contrail unit tests.
+Pytest configuration for conntrail unit tests.
 """
 from pathlib import Path
 
@@ -12,5 +12,5 @@ load_dotenv(Path(__file__).parent.parent / "testing" / ".env")
 
 def pytest_configure(config):
     config.addinivalue_line("markers", "integration: requires live API keys")
-    config.addinivalue_line("markers", "baseline: agent works without Contrail")
+    config.addinivalue_line("markers", "baseline: agent works without Conntrail")
     config.addinivalue_line("markers", "slow: takes > 10 seconds")

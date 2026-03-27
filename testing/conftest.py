@@ -1,5 +1,5 @@
 """
-Pytest configuration for the Contrail testing environment.
+Pytest configuration for the Conntrail testing environment.
 Provides shared fixtures for all agent integration tests.
 """
 import os
@@ -12,7 +12,7 @@ load_dotenv(Path(__file__).parent / ".env")
 
 
 def pytest_configure(config):
-    config.addinivalue_line("markers", "baseline: agent works without Contrail")
+    config.addinivalue_line("markers", "baseline: agent works without Conntrail")
     config.addinivalue_line("markers", "integration: requires live API keys")
     config.addinivalue_line("markers", "slow: takes > 10 seconds")
 

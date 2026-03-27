@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "contrail"
+name = "conntrail"
 version = "0.1.0"
 description = "Decision path tracer for LangGraph agents — contrastive routing analysis"
 requires-python = ">=3.11"
@@ -46,7 +46,7 @@ testing = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["contrail"]
+packages = ["conntrail"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -55,7 +55,7 @@ pythonpath = ["."]
 testpaths = ["tests"]
 markers = [
     "integration: requires live API keys",
-    "baseline: agent works without Contrail",
+    "baseline: agent works without Conntrail",
     "slow: takes > 10 seconds",
 ]
 

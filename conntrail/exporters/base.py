@@ -1,11 +1,11 @@
 """
-BaseExporter — abstract base class for all Contrail exporters.
+BaseExporter — abstract base class for all Conntrail exporters.
 """
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from contrail.record import TraceRecord
+from conntrail.record import TraceRecord
 
 
 class BaseExporter(ABC):

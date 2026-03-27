@@ -1,5 +1,5 @@
 """
-ContrailConfig — single configuration object passed at setup time.
+ConntrailConfig — single configuration object passed at setup time.
 """
 from __future__ import annotations
 
@@ -8,9 +8,9 @@ from typing import Callable, Literal
 
 
 @dataclass
-class ContrailConfig:
+class ConntrailConfig:
     """
-    Configuration for Contrail tracing.
+    Configuration for Conntrail tracing.
 
     Attributes:
         contrast_model: LLM model ID used for contrast generation.
@@ -29,7 +29,7 @@ class ContrailConfig:
     sample_rate: float = 1.0
     async_mode: bool = True
     export_format: Literal["jsonl", "langsmith", "stdout"] = "jsonl"
-    export_path: str = "./contrail_traces"
+    export_path: str = "./conntrail_traces"
     entropy_alert_threshold: float = 0.6
     on_alert: Callable | None = field(default=None, repr=False)
 

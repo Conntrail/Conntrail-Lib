@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Literal
 
-from contrail.contrast import ContrastSet
+from conntrail.contrast import ContrastSet
 
 
 @dataclass
@@ -17,7 +17,7 @@ class TraceRecord:
     Complete trace output for a single node invocation.
 
     Produced by DivergenceAnalyser and consumed by exporters.
-    Attached to agent state under the key ``__contrail_traces__``.
+    Attached to agent state under the key ``__conntrail_traces__``.
     """
 
     trace_id: str
@@ -39,12 +39,44 @@ class TraceRecord:
 
     def to_dict(self) -> dict[str, Any]:
         """Serialise to a JSON-safe dictionary."""
-        raise NotImplementedError("Phase 4")
+        return {
+            "trace_id": self.trace_id,
+            "node_id": self.node_id,
+            "timestamp": self.timestamp.isoformat(),
+            "original_input": self.original_input,
+            "original_route": self.original_route,
+            "entropy_score": self.entropy_score,
+            "stability": self.stability,
+            "attribution_dimension": self.attribution_dimension,
+            "plain_language_summary": self.plain_language_summary,
+            "raw_contrasts": {
+                "similar": self.raw_contrasts.similar,
+                "neutral": self.raw_contrasts.neutral,
+                "opposite": self.raw_contrasts.opposite,
+            },
+            "raw_outputs": self.raw_outputs,
+            "counterfactual_route": self.counterfactual_route,
+        }
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> TraceRecord:
         """Reconstruct a TraceRecord from a serialised dictionary."""
-        raise NotImplementedError("Phase 4")
+        from conntrail.contrast import ContrastSet
+
+        return cls(
+            trace_id=data["trace_id"],
+            node_id=data["node_id"],
+            timestamp=datetime.fromisoformat(data["timestamp"]),
+            original_input=data["original_input"],
+            original_route=data["original_route"],
+            entropy_score=data["entropy_score"],
+            stability=data["stability"],
+            attribution_dimension=data["attribution_dimension"],
+            plain_language_summary=data["plain_language_summary"],
+            raw_contrasts=ContrastSet(**data["raw_contrasts"]),
+            raw_outputs=data["raw_outputs"],
+            counterfactual_route=data.get("counterfactual_route"),
+        )
 
     @staticmethod
     def stability_label(entropy: float) -> Literal["confident", "boundary", "fragile"]:

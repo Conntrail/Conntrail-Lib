@@ -1,14 +1,14 @@
-# Contrail Testing Environment
+# Conntrail Testing Environment
 
-This folder contains real-world LangGraph agent examples used to validate Contrail integration.
+This folder contains real-world LangGraph agent examples used to validate Conntrail integration.
 
 ## Philosophy
 
-Rather than testing against toy fixtures, Contrail is validated against actual agents that engineers would deploy in production. This catches integration issues early and ensures the entropy/attribution outputs are meaningful.
+Rather than testing against toy fixtures, Conntrail is validated against actual agents that engineers would deploy in production. This catches integration issues early and ensures the entropy/attribution outputs are meaningful.
 
 ## Agents
 
-All agents are adapted from `langchain-ai/langgraph` official examples. Each has been trimmed to the routing-relevant core and adapted to be Contrail-wrappable without modifying the agent logic itself.
+All agents are adapted from `langchain-ai/langgraph` official examples. Each has been trimmed to the routing-relevant core and adapted to be Conntrail-wrappable without modifying the agent logic itself.
 
 | Agent | Source | Routing type |
 |---|---|---|
@@ -33,7 +33,7 @@ This will:
 ## Running Tests
 
 ```bash
-# Baseline tests (no Contrail, just verify agents work)
+# Baseline tests (no Conntrail, just verify agents work)
 pytest testing/ -m baseline
 
 # Integration tests (requires API keys)

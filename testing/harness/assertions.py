@@ -1,5 +1,5 @@
 """
-Reusable assertion helpers for Contrail TraceRecord validation.
+Reusable assertion helpers for Conntrail TraceRecord validation.
 """
 from typing import Any
 
@@ -61,11 +61,11 @@ def assert_entropy_range(
 
 def assert_non_intrusive(baseline_result: Any, wrapped_result: Any) -> None:
     """
-    Assert that wrapping with Contrail does not alter agent output.
-    Compares the final output dict, excluding __contrail_traces__.
+    Assert that wrapping with Conntrail does not alter agent output.
+    Compares the final output dict, excluding __conntrail_traces__.
     """
     def clean(output: dict) -> dict:
-        return {k: v for k, v in output.items() if k != "__contrail_traces__"}
+        return {k: v for k, v in output.items() if k != "__conntrail_traces__"}
 
     baseline_clean = clean(baseline_result.output)
     wrapped_clean = clean(wrapped_result.output)
@@ -79,7 +79,7 @@ def assert_non_intrusive(baseline_result: Any, wrapped_result: Any) -> None:
         f"wrapped={wrapped_result.nodes_visited}"
     )
     assert baseline_clean == wrapped_clean, (
-        f"Output changed after Contrail wrapping.\n"
+        f"Output changed after Conntrail wrapping.\n"
         f"Baseline: {baseline_clean}\n"
         f"Wrapped:  {wrapped_clean}"
     )

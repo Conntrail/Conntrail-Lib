@@ -9,9 +9,9 @@ import time
 
 import pytest
 
-from contrail.analyser import AnalysisResult, DivergenceAnalyser
-from contrail.contrast import ContrastSet
-from contrail.utils.entropy import routing_entropy
+from conntrail.analyser import AnalysisResult, DivergenceAnalyser
+from conntrail.contrast import ContrastSet
+from conntrail.utils.entropy import routing_entropy
 from tests.fixtures.sample_graphs import ROUTINE_INPUTS, URGENT_INPUTS, mock_router_node
 
 
@@ -53,20 +53,20 @@ class TestRoutingEntropy:
 
 class TestCosineSimilarity:
     def test_identical_vectors(self):
-        from contrail.utils.embedding import cosine_similarity
+        from conntrail.utils.embedding import cosine_similarity
         v = [1.0, 2.0, 3.0]
         assert cosine_similarity(v, v) == pytest.approx(1.0)
 
     def test_orthogonal_vectors(self):
-        from contrail.utils.embedding import cosine_similarity
+        from conntrail.utils.embedding import cosine_similarity
         assert cosine_similarity([1.0, 0.0], [0.0, 1.0]) == pytest.approx(0.0)
 
     def test_opposite_vectors(self):
-        from contrail.utils.embedding import cosine_similarity
+        from conntrail.utils.embedding import cosine_similarity
         assert cosine_similarity([1.0, 0.0], [-1.0, 0.0]) == pytest.approx(-1.0)
 
     def test_length_mismatch_raises(self):
-        from contrail.utils.embedding import cosine_similarity
+        from conntrail.utils.embedding import cosine_similarity
         with pytest.raises(ValueError):
             cosine_similarity([1.0], [1.0, 2.0])
 

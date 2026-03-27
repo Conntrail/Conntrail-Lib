@@ -1,5 +1,5 @@
 """
-Contrail testing harness.
+Conntrail testing harness.
 Provides BaseTestRunner, assertion helpers, and shared input fixtures.
 """
 from .assertions import assert_entropy_range, assert_non_intrusive, assert_trace_record

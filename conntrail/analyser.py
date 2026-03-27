@@ -8,11 +8,16 @@ from __future__ import annotations
 
 import asyncio
 import inspect
+import logging
+import random
+import re
 from dataclasses import dataclass
 from typing import Any, Callable
 
-from contrail.contrast import ContrastSet
-from contrail.utils.entropy import routing_entropy
+from conntrail.contrast import ContrastSet
+from conntrail.utils.entropy import routing_entropy
+
+logger = logging.getLogger("conntrail")
 
 # Fixed attribution labels by contrast dimension.
 # The dimension that first flips the route names the attribution.
@@ -111,10 +116,46 @@ class DivergenceAnalyser:
         )
 
     async def _call_node(self, node_fn: Callable, state: dict[str, Any]) -> Any:
-        """Call node_fn, handling both sync and async callables."""
-        if inspect.iscoroutinefunction(node_fn):
-            return await node_fn(state)
-        return await asyncio.to_thread(node_fn, state)
+        """Call node_fn with automatic retry on rate-limit errors (429).
+
+        Parses the provider's retry-after hint when present (e.g. Groq's
+        "Please try again in 2m5.3s" message) so retries respect the actual
+        window rather than blind exponential backoff.
+        """
+        max_retries = 4
+        for attempt in range(max_retries):
+            try:
+                if inspect.iscoroutinefunction(node_fn):
+                    return await node_fn(state)
+                return await asyncio.to_thread(node_fn, state)
+            except Exception as exc:
+                msg = str(exc)
+                is_rate_limit = (
+                    "429" in msg
+                    or "rate_limit" in msg.lower()
+                    or "rate limit" in msg.lower()
+                )
+                if is_rate_limit and attempt < max_retries - 1:
+                    delay = self._parse_retry_after(msg) or (5.0 * (2 ** attempt) + random.uniform(0, 1))
+                    logger.debug(
+                        "conntrail: rate limit on node call (attempt %d), retrying in %.1fs",
+                        attempt + 1,
+                        delay,
+                    )
+                    await asyncio.sleep(delay)
+                    continue
+                raise
+
+    @staticmethod
+    def _parse_retry_after(error_msg: str) -> float | None:
+        """Parse 'try again in Xm Y.Zs' or 'try again in Y.Zs' from an error message."""
+        # e.g. "Please try again in 1m50.592s"
+        m = re.search(r"try again in (?:(\d+)m\s*)?(\d+(?:\.\d+)?)s", error_msg, re.IGNORECASE)
+        if m:
+            minutes = float(m.group(1) or 0)
+            seconds = float(m.group(2))
+            return minutes * 60 + seconds + 2.0  # add 2s buffer
+        return None
 
     def _extract_route(
         self,

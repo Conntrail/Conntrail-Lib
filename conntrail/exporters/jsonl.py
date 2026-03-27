@@ -8,8 +8,8 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from contrail.exporters.base import BaseExporter
-from contrail.record import TraceRecord
+from conntrail.exporters.base import BaseExporter
+from conntrail.record import TraceRecord
 
 
 class JsonlExporter(BaseExporter):
@@ -18,21 +18,27 @@ class JsonlExporter(BaseExporter):
 
     Args:
         export_path: Directory where the .jsonl file will be written.
-            File is named ``contrail_traces_<date>.jsonl``.
+            File is named ``conntrail_traces_<date>.jsonl``.
     """
 
-    def __init__(self, export_path: str = "./contrail_traces") -> None:
+    def __init__(self, export_path: str = "./conntrail_traces") -> None:
         self.export_path = Path(export_path)
         self._file = None
 
     async def write(self, record: TraceRecord) -> None:
         """Append a TraceRecord as a JSON line."""
-        raise NotImplementedError("Phase 4")
+        import json
+
+        path = self._get_file_path()
+        with path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(record.to_dict()) + "\n")
 
     async def close(self) -> None:
-        """Flush and close the output file."""
-        raise NotImplementedError("Phase 4")
+        """No-op: file is opened/closed per write for append safety."""
 
     def _get_file_path(self) -> Path:
         """Return the current output file path, creating directory if needed."""
-        raise NotImplementedError("Phase 4")
+        from datetime import date
+
+        self.export_path.mkdir(parents=True, exist_ok=True)
+        return self.export_path / f"conntrail_traces_{date.today().isoformat()}.jsonl"

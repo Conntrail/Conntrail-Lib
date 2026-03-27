@@ -1,25 +1,25 @@
 """
 LangSmithExporter — pushes TraceRecords as LangSmith spans.
 
-Requires: pip install contrail[langsmith]
+Requires: pip install conntrail[langsmith]
 Requires: LANGSMITH_API_KEY environment variable.
 """
 from __future__ import annotations
 
-from contrail.exporters.base import BaseExporter
-from contrail.record import TraceRecord
+from conntrail.exporters.base import BaseExporter
+from conntrail.record import TraceRecord
 
 
 class LangSmithExporter(BaseExporter):
     """
     Wraps TraceRecord into a LangSmith-compatible span and pushes via
-    the LangSmith SDK. Adds all Contrail fields as span metadata.
+    the LangSmith SDK. Adds all Conntrail fields as span metadata.
 
     Args:
         project_name: LangSmith project to push traces to.
     """
 
-    def __init__(self, project_name: str = "contrail") -> None:
+    def __init__(self, project_name: str = "conntrail") -> None:
         self.project_name = project_name
         self._client = None  # lazy-initialised on first write
 

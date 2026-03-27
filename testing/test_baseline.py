@@ -1,7 +1,7 @@
 """
-Phase 0 baseline tests — verify all 4 agents run correctly without Contrail.
+Phase 0 baseline tests — verify all 4 agents run correctly without Conntrail.
 
-These tests must pass before any Contrail development begins.
+These tests must pass before any Conntrail development begins.
 They confirm our test subjects are functioning correctly as a clean baseline.
 """
 import pytest
@@ -11,7 +11,7 @@ from testing.harness.fixtures import ALL_INPUTS
 @pytest.mark.baseline
 @pytest.mark.integration
 class TestCustomerSupportBaseline:
-    """Customer support agent runs and routes correctly without Contrail."""
+    """Customer support agent runs and routes correctly without Conntrail."""
 
     @pytest.fixture(scope="class")
     def graph(self):
@@ -49,7 +49,7 @@ class TestCustomerSupportBaseline:
 @pytest.mark.baseline
 @pytest.mark.integration
 class TestReActAgentBaseline:
-    """ReAct agent runs and routes correctly without Contrail."""
+    """ReAct agent runs and routes correctly without Conntrail."""
 
     @pytest.fixture(scope="class")
     def graph(self):
@@ -77,7 +77,7 @@ class TestReActAgentBaseline:
 @pytest.mark.baseline
 @pytest.mark.integration
 class TestSupervisorBaseline:
-    """Multi-agent supervisor routes to correct specialist without Contrail."""
+    """Multi-agent supervisor routes to correct specialist without Conntrail."""
 
     @pytest.fixture(scope="class")
     def graph(self):
@@ -105,7 +105,7 @@ class TestSupervisorBaseline:
 @pytest.mark.baseline
 @pytest.mark.integration
 class TestAdaptiveRAGBaseline:
-    """Adaptive RAG agent selects correct retrieval strategy without Contrail."""
+    """Adaptive RAG agent selects correct retrieval strategy without Conntrail."""
 
     @pytest.fixture(scope="class")
     def graph(self):

@@ -8,8 +8,8 @@ Stability colours:
 """
 from __future__ import annotations
 
-from contrail.exporters.base import BaseExporter
-from contrail.record import TraceRecord
+from conntrail.exporters.base import BaseExporter
+from conntrail.record import TraceRecord
 
 # ANSI colour codes
 _GREEN = "\033[92m"
@@ -33,4 +33,13 @@ class StdoutExporter(BaseExporter):
 
     async def write(self, record: TraceRecord) -> None:
         """Print a formatted summary for one TraceRecord."""
-        raise NotImplementedError("Phase 4")
+        colour = _STABILITY_COLOUR.get(record.stability, _RESET)
+        label = f"{colour}{_BOLD}{record.stability.upper()}{_RESET}"
+        print(
+            f"\n{_BOLD}[CONNTRAIL]{_RESET} {record.node_id} | {label} | "
+            f"entropy={record.entropy_score:.2f} | attr: {record.attribution_dimension}"
+        )
+        print(f"  → Route:   {record.original_route}")
+        if record.counterfactual_route:
+            print(f"  → Alt:     {record.counterfactual_route}")
+        print(f"  → Summary: {record.plain_language_summary}")

@@ -16,7 +16,7 @@ class RunResult:
     route_taken: str | None          # final route/node if detectable
     nodes_visited: list[str]         # ordered list of nodes visited
     wall_time_ms: float
-    contrail_traces: list[Any] = field(default_factory=list)  # TraceRecords if present
+    conntrail_traces: list[Any] = field(default_factory=list)  # TraceRecords if present
     error: Exception | None = None
 
 
@@ -60,10 +60,10 @@ class BaseTestRunner:
 
         wall_time_ms = (time.perf_counter() - start) * 1000
 
-        # Extract contrail traces from output metadata if present
-        contrail_traces = []
-        if "__contrail_traces__" in final_output:
-            contrail_traces = final_output["__contrail_traces__"]
+        # Extract conntrail traces from output metadata if present
+        conntrail_traces = []
+        if "__conntrail_traces__" in final_output:
+            conntrail_traces = final_output["__conntrail_traces__"]
 
         # Infer route from last node visited
         route_taken = nodes_visited[-1] if nodes_visited else None
@@ -74,7 +74,7 @@ class BaseTestRunner:
             route_taken=route_taken,
             nodes_visited=nodes_visited,
             wall_time_ms=wall_time_ms,
-            contrail_traces=contrail_traces,
+            conntrail_traces=conntrail_traces,
             error=error,
         )
 
@@ -88,7 +88,7 @@ class BaseTestRunner:
         wrap_fn: Callable,
     ) -> tuple[RunResult, RunResult]:
         """
-        Run the same input through the agent before and after Contrail wrapping.
+        Run the same input through the agent before and after Conntrail wrapping.
         Returns (baseline_result, wrapped_result) for non-intrusion assertions.
         """
         baseline = await self.run(input_state)

@@ -91,7 +91,7 @@ class ContrastGenerator:
     def _get_llm(self) -> BaseChatModel:
         """Lazy-build and cache the LangChain model instance."""
         if self._llm is None:
-            from contrail.utils.providers import get_chat_model
+            from conntrail.utils.providers import get_chat_model
             self._llm = get_chat_model(self.model, max_tokens=300)
         return self._llm
 
@@ -126,13 +126,16 @@ class ContrastGenerator:
         # Extract the JSON object (handles leading/trailing prose)
         start = text.find("{")
         end = text.rfind("}") + 1
-        if start == -1 or end == 0:
+        if start == -1:
             raise ContrastGenerationError(
                 f"No JSON object found in LLM response: {raw!r}"
             )
 
+        # Handle truncated responses (max_tokens hit) — try closing the object
+        candidate = text[start:end] if end > 0 else text[start:] + "\n}"
+
         try:
-            data = json.loads(text[start:end])
+            data = json.loads(candidate)
         except json.JSONDecodeError as e:
             raise ContrastGenerationError(
                 f"Invalid JSON in LLM response: {e}\nRaw: {raw!r}"

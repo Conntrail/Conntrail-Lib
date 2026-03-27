@@ -179,7 +179,7 @@ async def main() -> None:
     from testing.harness.llm import detect_provider
 
     log(DIVIDER)
-    log("CONTRAIL — Phase 0 Smoke Test")
+    log("CONNTRAIL — Phase 0 Smoke Test")
     log(f"Timestamp : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     try:
         provider = detect_provider()
