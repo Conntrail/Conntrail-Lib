@@ -1,0 +1,825 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.0.2, pluggy-1.6.0 -- /mnt/stuff-first/Projects/Conntrail-Lib/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /mnt/stuff-first/Projects/Conntrail-Lib
+configfile: pyproject.toml
+plugins: anyio-4.13.0, langsmith-0.7.22, asyncio-1.3.0, mock-3.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=session, asyncio_default_test_loop_scope=function
+collecting ... collected 25 items
+
+testing/test_conntrail_integration.py::TestNonIntrusion::test_output_unchanged[customer_support] PASSED [  4%]
+testing/test_conntrail_integration.py::TestNonIntrusion::test_output_unchanged[multi_agent_supervisor] PASSED [  8%]
+testing/test_conntrail_integration.py::TestNonIntrusion::test_output_unchanged[adaptive_rag] PASSED [ 12%]
+testing/test_conntrail_integration.py::TestTraceCompleteness::test_traces_present[customer_support] PASSED [ 16%]
+testing/test_conntrail_integration.py::TestTraceCompleteness::test_traces_present[multi_agent_supervisor] PASSED [ 20%]
+testing/test_conntrail_integration.py::TestTraceCompleteness::test_traces_present[adaptive_rag] PASSED [ 24%]
+testing/test_conntrail_integration.py::TestEntropyCalibration::test_entropy_in_range[confident-customer_support] PASSED [ 28%]
+testing/test_conntrail_integration.py::TestEntropyCalibration::test_entropy_in_range[confident-multi_agent_supervisor] PASSED [ 32%]
+testing/test_conntrail_integration.py::TestEntropyCalibration::test_entropy_in_range[confident-adaptive_rag] PASSED [ 36%]
+testing/test_conntrail_integration.py::TestEntropyCalibration::test_entropy_in_range[boundary-customer_support] PASSED [ 40%]
+testing/test_conntrail_integration.py::TestEntropyCalibration::test_entropy_in_range[boundary-multi_agent_supervisor] PASSED [ 44%]
+testing/test_conntrail_integration.py::TestEntropyCalibration::test_entropy_in_range[boundary-adaptive_rag] PASSED [ 48%]
+testing/test_conntrail_integration.py::TestEntropyCalibration::test_entropy_in_range[fragile-customer_support] PASSED [ 52%]
+testing/test_conntrail_integration.py::TestEntropyCalibration::test_entropy_in_range[fragile-multi_agent_supervisor] PASSED [ 56%]
+testing/test_conntrail_integration.py::TestEntropyCalibration::test_entropy_in_range[fragile-adaptive_rag] FAILED [ 60%]
+testing/test_conntrail_integration.py::TestAttributionPlausibility::test_attribution_labels_readable[customer_support] PASSED [ 64%]
+testing/test_conntrail_integration.py::TestAttributionPlausibility::test_attribution_labels_readable[multi_agent_supervisor] PASSED [ 68%]
+testing/test_conntrail_integration.py::TestAttributionPlausibility::test_attribution_labels_readable[adaptive_rag] PASSED [ 72%]
+testing/test_conntrail_integration.py::TestLatencyOverhead::test_hot_path_latency[customer_support] FAILED [ 76%]
+testing/test_conntrail_integration.py::TestLatencyOverhead::test_hot_path_latency[multi_agent_supervisor] FAILED [ 80%]
+testing/test_conntrail_integration.py::TestLatencyOverhead::test_hot_path_latency[adaptive_rag] FAILED [ 84%]
+testing/test_conntrail_integration.py::TestJSONLRoundTrip::test_jsonl_roundtrip[customer_support] PASSED [ 88%]
+testing/test_conntrail_integration.py::TestJSONLRoundTrip::test_jsonl_roundtrip[multi_agent_supervisor] PASSED [ 92%]
+testing/test_conntrail_integration.py::TestJSONLRoundTrip::test_jsonl_roundtrip[adaptive_rag] PASSED [ 96%]
+testing/test_conntrail_integration.py::TestPromptQualityAudit::test_prompt_quality_audit PASSED [100%]
+
+=================================== FAILURES ===================================
+______ TestEntropyCalibration.test_entropy_in_range[fragile-adaptive_rag] ______
+testing/test_conntrail_integration.py:164: in test_entropy_in_range
+    assert failure_rate <= 0.2, (
+E   AssertionError: adaptive_rag fragile: 1/1 inputs failed entropy calibration (>20% threshold)
+E   assert 1.0 <= 0.2
+----------------------------- Captured stdout call -----------------------------
+
+[1m[CONNTRAIL][0m route_query | [92m[1mCONFIDENT[0m | entropy=-0.00 | attr: none detected
+  → Route:   vector_search
+  → Summary: The 'route_query' node routed to 'vector_search' with confident confidence (entropy: -0.00). The decision appears to have been driven by none detected in the input.
+------------------------------ Captured log call -------------------------------
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1195' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1196' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1197' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+_________ TestLatencyOverhead.test_hot_path_latency[customer_support] __________
+testing/test_conntrail_integration.py:237: in test_hot_path_latency
+    await wrapped_graph.ainvoke(input_state)
+.venv/lib/python3.11/site-packages/langgraph/pregel/main.py:3171: in ainvoke
+    async for chunk in self.astream(
+.venv/lib/python3.11/site-packages/langgraph/pregel/main.py:2993: in astream
+    async for _ in runner.atick(
+.venv/lib/python3.11/site-packages/langgraph/pregel/_runner.py:295: in atick
+    await arun_with_retry(
+.venv/lib/python3.11/site-packages/langgraph/pregel/_retry.py:137: in arun_with_retry
+    return await task.proc.ainvoke(task.input, config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/langgraph/_internal/_runnable.py:706: in ainvoke
+    input = await asyncio.create_task(
+.venv/lib/python3.11/site-packages/langgraph/_internal/_runnable.py:474: in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+conntrail/interceptor.py:72: in __call__
+    output = await self.node_fn(state)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+testing/agents/customer_support/agent.py:33: in classify_query
+    response = await llm.ainvoke([
+.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py:417: in ainvoke
+    llm_result = await self.agenerate_prompt(
+.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py:1036: in agenerate_prompt
+    return await self.agenerate(
+.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py:994: in agenerate
+    raise exceptions[0]
+.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py:1164: in _agenerate_with_cache
+    result = await self._agenerate(
+.venv/lib/python3.11/site-packages/langchain_groq/chat_models.py:554: in _agenerate
+    response = await self.async_client.create(messages=message_dicts, **params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/groq/resources/chat/completions.py:941: in create
+    return await self._post(
+.venv/lib/python3.11/site-packages/groq/_base_client.py:1762: in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/groq/_base_client.py:1576: in request
+    raise self._make_status_error_from_response(err.response) from None
+E   groq.RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01hxgtkgtdet2s002s5yeveega` service tier `on_demand` on requests per minute (RPM): Limit 30, Used 30, Requested 1. Please try again in 2s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'requests', 'code': 'rate_limit_exceeded'}}
+E   During task with name 'classify_query' and id '5b0f59a3-3ec2-d482-0028-df85f3a036ca'
+------------------------------ Captured log call -------------------------------
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1650' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1651' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1652' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1653' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1654' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1655' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1656' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1657' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1658' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1659' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1660' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1661' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1662' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1663' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1664' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1665' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1666' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1667' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1668' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+ERROR    asyncio:base_events.py:1785 Task exception was never retrieved
+future: <Task finished name='Task-1669' coro=<AsyncClient.aclose() done, defined at /mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py:1978> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1985, in aclose
+    await self._transport.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 406, in aclose
+    await self._pool.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 353, in aclose
+    await self._close_connections(closing_connections)
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection_pool.py", line 345, in _close_connections
+    await connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/connection.py", line 173, in aclose
+    await self._connection.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_async/http11.py", line 258, in aclose
+    await self._network_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/httpcore/_backends/anyio.py", line 53, in aclose
+    await self._stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/streams/tls.py", line 236, in aclose
+    await self.transport_stream.aclose()
+  File "/mnt/stuff-first/Projects/Conntrail-Lib/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1344, in aclose
+    self._transport.close()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/selector_events.py", line 864, in close
+    self._loop.call_soon(self._call_connection_lost, None)
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/home/ibz/.local/share/uv/python/cpython-3.11.14-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+WARNING  conntrail:interceptor.py:175 conntrail: analysis failed for node 'handle_general': LLM call failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01hxgtkgtdet2s002s5yeveega` service tier `on_demand` on requests per minute (RPM): Limit 30, Used 30, Requested 1. Please try again in 2s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'requests', 'code': 'rate_limit_exceeded'}}
+______ TestLatencyOverhead.test_hot_path_latency[multi_agent_supervisor] _______
+testing/test_conntrail_integration.py:237: in test_hot_path_latency
+    await wrapped_graph.ainvoke(input_state)
+.venv/lib/python3.11/site-packages/langgraph/pregel/main.py:3171: in ainvoke
+    async for chunk in self.astream(
+.venv/lib/python3.11/site-packages/langgraph/pregel/main.py:2993: in astream
+    async for _ in runner.atick(
+.venv/lib/python3.11/site-packages/langgraph/pregel/_runner.py:295: in atick
+    await arun_with_retry(
+.venv/lib/python3.11/site-packages/langgraph/pregel/_retry.py:137: in arun_with_retry
+    return await task.proc.ainvoke(task.input, config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/langgraph/_internal/_runnable.py:706: in ainvoke
+    input = await asyncio.create_task(
+.venv/lib/python3.11/site-packages/langgraph/_internal/_runnable.py:474: in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+conntrail/interceptor.py:72: in __call__
+    output = await self.node_fn(state)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+testing/agents/multi_agent_supervisor/agent.py:31: in supervisor_node
+    response = await llm.ainvoke([
+.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py:417: in ainvoke
+    llm_result = await self.agenerate_prompt(
+.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py:1036: in agenerate_prompt
+    return await self.agenerate(
+.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py:994: in agenerate
+    raise exceptions[0]
+.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py:1164: in _agenerate_with_cache
+    result = await self._agenerate(
+.venv/lib/python3.11/site-packages/langchain_groq/chat_models.py:554: in _agenerate
+    response = await self.async_client.create(messages=message_dicts, **params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/groq/resources/chat/completions.py:941: in create
+    return await self._post(
+.venv/lib/python3.11/site-packages/groq/_base_client.py:1762: in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/groq/_base_client.py:1576: in request
+    raise self._make_status_error_from_response(err.response) from None
+E   groq.RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01hxgtkgtdet2s002s5yeveega` service tier `on_demand` on requests per minute (RPM): Limit 30, Used 30, Requested 1. Please try again in 2s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'requests', 'code': 'rate_limit_exceeded'}}
+E   During task with name 'supervisor' and id 'c6a13042-00c0-fbe0-4ac5-0567c5dd6145'
+___________ TestLatencyOverhead.test_hot_path_latency[adaptive_rag] ____________
+testing/test_conntrail_integration.py:237: in test_hot_path_latency
+    await wrapped_graph.ainvoke(input_state)
+.venv/lib/python3.11/site-packages/langgraph/pregel/main.py:3171: in ainvoke
+    async for chunk in self.astream(
+.venv/lib/python3.11/site-packages/langgraph/pregel/main.py:2993: in astream
+    async for _ in runner.atick(
+.venv/lib/python3.11/site-packages/langgraph/pregel/_runner.py:295: in atick
+    await arun_with_retry(
+.venv/lib/python3.11/site-packages/langgraph/pregel/_retry.py:137: in arun_with_retry
+    return await task.proc.ainvoke(task.input, config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/langgraph/_internal/_runnable.py:706: in ainvoke
+    input = await asyncio.create_task(
+.venv/lib/python3.11/site-packages/langgraph/_internal/_runnable.py:474: in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+conntrail/interceptor.py:72: in __call__
+    output = await self.node_fn(state)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+testing/agents/adaptive_rag/agent.py:71: in direct_answer
+    response = await _get_llm().ainvoke([
+.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py:417: in ainvoke
+    llm_result = await self.agenerate_prompt(
+.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py:1036: in agenerate_prompt
+    return await self.agenerate(
+.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py:994: in agenerate
+    raise exceptions[0]
+.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py:1164: in _agenerate_with_cache
+    result = await self._agenerate(
+.venv/lib/python3.11/site-packages/langchain_groq/chat_models.py:554: in _agenerate
+    response = await self.async_client.create(messages=message_dicts, **params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/groq/resources/chat/completions.py:941: in create
+    return await self._post(
+.venv/lib/python3.11/site-packages/groq/_base_client.py:1762: in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/groq/_base_client.py:1576: in request
+    raise self._make_status_error_from_response(err.response) from None
+E   groq.RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01hxgtkgtdet2s002s5yeveega` service tier `on_demand` on requests per minute (RPM): Limit 30, Used 30, Requested 1. Please try again in 2s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'requests', 'code': 'rate_limit_exceeded'}}
+E   During task with name 'direct_answer' and id '9169c8b7-12e4-a4ae-e166-bcc8cd8f7382'
+=========================== short test summary info ============================
+FAILED testing/test_conntrail_integration.py::TestEntropyCalibration::test_entropy_in_range[fragile-adaptive_rag]
+FAILED testing/test_conntrail_integration.py::TestLatencyOverhead::test_hot_path_latency[customer_support]
+FAILED testing/test_conntrail_integration.py::TestLatencyOverhead::test_hot_path_latency[multi_agent_supervisor]
+FAILED testing/test_conntrail_integration.py::TestLatencyOverhead::test_hot_path_latency[adaptive_rag]
+=================== 4 failed, 21 passed in 547.04s (0:09:07) ===================

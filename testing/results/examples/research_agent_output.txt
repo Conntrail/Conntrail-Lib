@@ -1,0 +1,291 @@
+======================================================================
+Conntrail Example: Research Agent with Selective Tracing
+======================================================================
+
+This example demonstrates:
+- Tracing ONLY specific routing nodes (query_classifier, source_selector)
+- async_mode=False for programmatic trace access
+- Multi-step agent with multiple routing decisions
+
+Tracing nodes: query_classifier, source_selector
+async_mode: False (traces returned in result)
+
+──────────────────────────────────────────────────────────────────────
+
+
+──────────────────────────────────────────────────────────────────────
+Test: Clear Factual Query
+Query: What is the capital of France and its population?
+Expected Path: factual → both
+──────────────────────────────────────────────────────────────────────
+
+
+[1m[CONNTRAIL][0m query_classifier | [93m[1mBOUNDARY[0m | entropy=0.50 | attr: semantic intensity
+  → Route:   factual
+  → Alt:     complex
+  → Summary: The 'query_classifier' node routed to 'factual' with boundary confidence (entropy: 0.50). The decision appears to have been driven by semantic intensity in the input. If that dimension were removed, the agent would likely have taken the 'complex' path instead.
+
+[1m[CONNTRAIL][0m source_selector | [92m[1mCONFIDENT[0m | entropy=-0.00 | attr: none detected
+  → Route:   both
+  → Summary: The 'source_selector' node routed to 'both' with confident confidence (entropy: -0.00). The decision appears to have been driven by none detected in the input.
+
+Result:
+  Query Type: factual
+  Source Strategy: both
+  Output: [Web + KB] Comprehensive results for: What is the capital of France and its population?
+
+======================================================================
+📊 TRACE ANALYSIS: 2 routing decisions traced
+======================================================================
+
+Trace #1
+  Node: query_classifier
+  Input: What is the capital of France and its population?...
+  Decision: factual
+  Entropy Score: 0.500
+  Stability: boundary
+  Attribution: semantic intensity
+  Interpretation: ⚠️  Moderate stability - monitor this
+
+Trace #2
+  Node: source_selector
+  Input: What is the capital of France and its population?...
+  Decision: both
+  Entropy Score: -0.000
+  Stability: confident
+  Attribution: none detected
+  Interpretation: ✅ Very stable - model is confident
+
+Summary Statistics:
+  Average Entropy: 0.250
+  Min Entropy: -0.000
+  Max Entropy: 0.500
+  Overall Assessment: Agent decisions are STABLE ✅
+
+======================================================================
+
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Test: Opinion Query
+Query: What is the best programming language for beginners?
+Expected Path: opinion → both
+──────────────────────────────────────────────────────────────────────
+
+
+[1m[CONNTRAIL][0m query_classifier | [93m[1mBOUNDARY[0m | entropy=0.50 | attr: semantic intensity
+  → Route:   complex
+  → Alt:     opinion
+  → Summary: The 'query_classifier' node routed to 'complex' with boundary confidence (entropy: 0.50). The decision appears to have been driven by semantic intensity in the input. If that dimension were removed, the agent would likely have taken the 'opinion' path instead.
+
+[1m[CONNTRAIL][0m source_selector | [92m[1mCONFIDENT[0m | entropy=-0.00 | attr: none detected
+  → Route:   both
+  → Summary: The 'source_selector' node routed to 'both' with confident confidence (entropy: -0.00). The decision appears to have been driven by none detected in the input.
+
+Result:
+  Query Type: complex
+  Source Strategy: both
+  Output: [Web + KB] Comprehensive results for: What is the best programming language for beginners?
+
+======================================================================
+📊 TRACE ANALYSIS: 2 routing decisions traced
+======================================================================
+
+Trace #1
+  Node: query_classifier
+  Input: What is the best programming language for beginners?...
+  Decision: complex
+  Entropy Score: 0.500
+  Stability: boundary
+  Attribution: semantic intensity
+  Interpretation: ⚠️  Moderate stability - monitor this
+
+Trace #2
+  Node: source_selector
+  Input: What is the best programming language for beginners?...
+  Decision: both
+  Entropy Score: -0.000
+  Stability: confident
+  Attribution: none detected
+  Interpretation: ✅ Very stable - model is confident
+
+Summary Statistics:
+  Average Entropy: 0.250
+  Min Entropy: -0.000
+  Max Entropy: 0.500
+  Overall Assessment: Agent decisions are STABLE ✅
+
+======================================================================
+
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Test: Time-Sensitive Query
+Query: What is the latest news about AI today?
+Expected Path: factual → web
+──────────────────────────────────────────────────────────────────────
+
+
+[1m[CONNTRAIL][0m query_classifier | [93m[1mBOUNDARY[0m | entropy=0.50 | attr: semantic intensity
+  → Route:   factual
+  → Alt:     complex
+  → Summary: The 'query_classifier' node routed to 'factual' with boundary confidence (entropy: 0.50). The decision appears to have been driven by semantic intensity in the input. If that dimension were removed, the agent would likely have taken the 'complex' path instead.
+
+[1m[CONNTRAIL][0m source_selector | [92m[1mCONFIDENT[0m | entropy=-0.00 | attr: none detected
+  → Route:   web
+  → Summary: The 'source_selector' node routed to 'web' with confident confidence (entropy: -0.00). The decision appears to have been driven by none detected in the input.
+
+Result:
+  Query Type: factual
+  Source Strategy: web
+  Output: [Web Search] Results for: What is the latest news about AI today?
+
+======================================================================
+📊 TRACE ANALYSIS: 2 routing decisions traced
+======================================================================
+
+Trace #1
+  Node: query_classifier
+  Input: What is the latest news about AI today?...
+  Decision: factual
+  Entropy Score: 0.500
+  Stability: boundary
+  Attribution: semantic intensity
+  Interpretation: ⚠️  Moderate stability - monitor this
+
+Trace #2
+  Node: source_selector
+  Input: What is the latest news about AI today?...
+  Decision: web
+  Entropy Score: -0.000
+  Stability: confident
+  Attribution: none detected
+  Interpretation: ✅ Very stable - model is confident
+
+Summary Statistics:
+  Average Entropy: 0.250
+  Min Entropy: -0.000
+  Max Entropy: 0.500
+  Overall Assessment: Agent decisions are STABLE ✅
+
+======================================================================
+
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Test: Complex Query
+Query: Compare and contrast Python vs JavaScript
+Expected Path: complex → both
+──────────────────────────────────────────────────────────────────────
+
+
+[1m[CONNTRAIL][0m query_classifier | [92m[1mCONFIDENT[0m | entropy=-0.00 | attr: none detected
+  → Route:   complex
+  → Summary: The 'query_classifier' node routed to 'complex' with confident confidence (entropy: -0.00). The decision appears to have been driven by none detected in the input.
+
+[1m[CONNTRAIL][0m source_selector | [92m[1mCONFIDENT[0m | entropy=-0.00 | attr: none detected
+  → Route:   both
+  → Summary: The 'source_selector' node routed to 'both' with confident confidence (entropy: -0.00). The decision appears to have been driven by none detected in the input.
+
+Result:
+  Query Type: complex
+  Source Strategy: both
+  Output: [Web + KB] Comprehensive results for: Compare and contrast Python vs JavaScript
+
+======================================================================
+📊 TRACE ANALYSIS: 2 routing decisions traced
+======================================================================
+
+Trace #1
+  Node: query_classifier
+  Input: Compare and contrast Python vs JavaScript...
+  Decision: complex
+  Entropy Score: -0.000
+  Stability: confident
+  Attribution: none detected
+  Interpretation: ✅ Very stable - model is confident
+
+Trace #2
+  Node: source_selector
+  Input: Compare and contrast Python vs JavaScript...
+  Decision: both
+  Entropy Score: -0.000
+  Stability: confident
+  Attribution: none detected
+  Interpretation: ✅ Very stable - model is confident
+
+Summary Statistics:
+  Average Entropy: 0.000
+  Min Entropy: -0.000
+  Max Entropy: -0.000
+  Overall Assessment: Agent decisions are STABLE ✅
+
+======================================================================
+
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Test: Ambiguous Query
+Query: Tell me about machine learning
+Expected Path: factual or complex → both
+──────────────────────────────────────────────────────────────────────
+
+
+[1m[CONNTRAIL][0m query_classifier | [93m[1mBOUNDARY[0m | entropy=0.50 | attr: urgency/sentiment
+  → Route:   complex
+  → Alt:     factual
+  → Summary: The 'query_classifier' node routed to 'complex' with boundary confidence (entropy: 0.50). The decision appears to have been driven by urgency/sentiment in the input. If that dimension were removed, the agent would likely have taken the 'factual' path instead.
+
+[1m[CONNTRAIL][0m source_selector | [92m[1mCONFIDENT[0m | entropy=-0.00 | attr: none detected
+  → Route:   both
+  → Summary: The 'source_selector' node routed to 'both' with confident confidence (entropy: -0.00). The decision appears to have been driven by none detected in the input.
+
+Result:
+  Query Type: complex
+  Source Strategy: both
+  Output: [Web + KB] Comprehensive results for: Tell me about machine learning
+
+======================================================================
+📊 TRACE ANALYSIS: 2 routing decisions traced
+======================================================================
+
+Trace #1
+  Node: query_classifier
+  Input: Tell me about machine learning...
+  Decision: complex
+  Entropy Score: 0.500
+  Stability: boundary
+  Attribution: urgency/sentiment
+  Interpretation: ⚠️  Moderate stability - monitor this
+
+Trace #2
+  Node: source_selector
+  Input: Tell me about machine learning...
+  Decision: both
+  Entropy Score: -0.000
+  Stability: confident
+  Attribution: none detected
+  Interpretation: ✅ Very stable - model is confident
+
+Summary Statistics:
+  Average Entropy: 0.250
+  Min Entropy: -0.000
+  Max Entropy: 0.500
+  Overall Assessment: Agent decisions are STABLE ✅
+
+======================================================================
+
+======================================================================
+
+✅ Research agent tests completed!
+
+Key Takeaways:
+- Use `only_nodes` to trace specific routing nodes only
+- Use `async_mode=False` to access traces programmatically
+- Multi-step agents have multiple decision points to monitor
+- Trace data helps identify which routing decisions need attention
+
+This pattern is useful for:
+  - Building custom monitoring dashboards
+  - Debugging agent routing behavior
+  - Collecting training data for model improvements

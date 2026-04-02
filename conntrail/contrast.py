@@ -6,10 +6,12 @@ Produces 3 variants via a single structured LLM call:
   - neutral:  urgency/sentiment stripped, core intent preserved
   - opposite: semantic inversion of the key dimension
 """
+
 from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 
 from langchain_core.language_models import BaseChatModel
@@ -36,6 +38,15 @@ class ContrastSet:
 
     def all_non_empty(self) -> bool:
         return all(len(v.strip()) >= 5 for v in self.as_list())
+
+
+@lru_cache(maxsize=1)
+def _load_prompt_template_cached() -> str:
+    """Load and cache the prompt template from disk."""
+    try:
+        return _PROMPT_PATH.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        raise ContrastGenerationError(f"Prompt template not found at {_PROMPT_PATH}")
 
 
 class ContrastGenerator:
@@ -92,17 +103,13 @@ class ContrastGenerator:
         """Lazy-build and cache the LangChain model instance."""
         if self._llm is None:
             from conntrail.utils.providers import get_chat_model
+
             self._llm = get_chat_model(self.model, max_tokens=300)
         return self._llm
 
     def _load_prompt_template(self) -> str:
         """Load the versioned prompt template from prompts/contrast_gen.txt."""
-        try:
-            return _PROMPT_PATH.read_text(encoding="utf-8")
-        except FileNotFoundError:
-            raise ContrastGenerationError(
-                f"Prompt template not found at {_PROMPT_PATH}"
-            )
+        return _load_prompt_template_cached()
 
     def _parse_response(self, raw: str) -> ContrastSet:
         """
@@ -127,9 +134,7 @@ class ContrastGenerator:
         start = text.find("{")
         end = text.rfind("}") + 1
         if start == -1:
-            raise ContrastGenerationError(
-                f"No JSON object found in LLM response: {raw!r}"
-            )
+            raise ContrastGenerationError(f"No JSON object found in LLM response: {raw!r}")
 
         # Handle truncated responses (max_tokens hit) — try closing the object
         candidate = text[start:end] if end > 0 else text[start:] + "\n}"
@@ -137,17 +142,13 @@ class ContrastGenerator:
         try:
             data = json.loads(candidate)
         except json.JSONDecodeError as e:
-            raise ContrastGenerationError(
-                f"Invalid JSON in LLM response: {e}\nRaw: {raw!r}"
-            ) from e
+            raise ContrastGenerationError(f"Invalid JSON in LLM response: {e}\nRaw: {raw!r}") from e
 
         # Validate all required keys
         extracted: dict[str, str] = {}
         for key in ("similar", "neutral", "opposite"):
             if key not in data:
-                raise ContrastGenerationError(
-                    f"Missing required key {key!r} in response: {data}"
-                )
+                raise ContrastGenerationError(f"Missing required key {key!r} in response: {data}")
             value = data[key]
             # Handle nested dicts: LLMs sometimes return {key: {input: "...", ...}}
             if isinstance(value, dict):
@@ -160,9 +161,7 @@ class ContrastGenerator:
                         f"Could not extract string from nested dict for {key!r}: {data[key]!r}"
                     )
             if not isinstance(value, str) or not value.strip():
-                raise ContrastGenerationError(
-                    f"Empty or invalid value for {key!r}: {value!r}"
-                )
+                raise ContrastGenerationError(f"Empty or invalid value for {key!r}: {value!r}")
             extracted[key] = value.strip()
 
         return ContrastSet(

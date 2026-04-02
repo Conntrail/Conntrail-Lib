@@ -1,0 +1,89 @@
+======================================================================
+Conntrail Example: Content Moderation Agent
+======================================================================
+
+This example demonstrates safety-critical decision tracing
+with audit trails and fragile decision alerts.
+
+Export path: ./conntrail_traces
+Sample rate: 0.5 (50% of decisions will be traced)
+Alert threshold: 0.5
+
+──────────────────────────────────────────────────────────────────────
+
+
+──────────────────────────────────────────────────────────────────────
+Test: Clear Violation
+Content: I want to kill everyone at the company. This is a threat.
+Expected Decision: reject
+Expected Entropy: Low (clear violation)
+──────────────────────────────────────────────────────────────────────
+
+
+Result: reject
+Reason: ❌ REJECTED: High-confidence violation detected
+
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Test: Clearly Safe
+Content: Hello! Thank you for the help with my recipe yesterday.
+Expected Decision: approve
+Expected Entropy: Low (clearly safe)
+──────────────────────────────────────────────────────────────────────
+
+
+Result: approve
+Reason: ✅ APPROVED: High-confidence safe content
+
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Test: Borderline: Negative Language
+Content: This stupid policy is so annoying, I hate it.
+Expected Decision: flag_for_review
+Expected Entropy: Medium-High (sentiment is negative but not threatening)
+──────────────────────────────────────────────────────────────────────
+
+
+Result: flag
+Reason: ⚠️  FLAGGED: Borderline content - requires human review
+
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Test: Borderline: Controversial Topic
+Content: My political opinion is that this debate is controversial.
+Expected Decision: flag_for_review
+Expected Entropy: Medium-High (context-dependent classification)
+──────────────────────────────────────────────────────────────────────
+
+
+Result: flag
+Reason: ⚠️  FLAGGED: Borderline content - requires human review
+
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Test: Ambiguous Complaint
+Content: Something is wrong and I feel dumb for asking.
+Expected Decision: flag_for_review
+Expected Entropy: Medium (mild self-deprecation, unclear severity)
+──────────────────────────────────────────────────────────────────────
+
+
+Result: flag
+Reason: ⚠️  FLAGGED: Borderline content - requires human review
+
+======================================================================
+
+✅ Content moderation tests completed!
+
+Key Takeaways:
+- Safety-critical systems need LOWER entropy thresholds
+- jsonl export creates persistent audit trails for compliance
+- sample_rate balances cost vs observability coverage
+- Borderline content naturally has higher entropy - this is expected!
+
+Audit trails saved to: ./conntrail_traces/
+Review the .jsonl files to see the full trace records.

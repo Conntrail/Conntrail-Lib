@@ -1,6 +1,26 @@
 # Conntrail
 
+[![CI](https://github.com/Conntrail/conntrail/actions/workflows/ci.yml/badge.svg)](https://github.com/Conntrail/conntrail/actions)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Decision path tracer for LangGraph agents. Measures routing stability via contrastive analysis — wraps routing nodes, generates semantic variants of each input, reruns them, and reports how consistently the node makes the same decision.
+
+## Why Conntrail?
+
+LangGraph agents route user inputs through conditional nodes. But **routing that seems correct in testing often fails in production** when user phrasing varies.
+
+**Real impacts:**
+- **Customer support** — "I need help with my order" vs "Where is my stuff?" route to different handlers
+- **Content moderation** — "This is spicy" (food) vs "This is spicy" (NSFW) cause inconsistent actions
+- **Safety-critical** — "stop" vs "please stop now" bypass safeguards
+- **Debugging nightmare** — "the router did something weird" with no attribution
+
+**Conntrail helps you:**
+- **Detect decision boundaries** — know which inputs sit on the edge between routes
+- **Measure robustness** — quantify how stable each routing decision is
+- **Debug with attribution** — understand *why* a node made a particular choice
+- **Validate automatically** — catch fragile routing before it reaches production
 
 ## How it works
 
@@ -152,7 +172,15 @@ Each trace contains:
 
 **LangSmith** — planned (Phase 7)
 
+## Roadmap
+
+- [ ] **Phase 3**: Embedding-based similarity for non-branching nodes
+- [ ] **Phase 6**: LLM-based open-ended attribution labels
+- [ ] **Phase 7**: LangSmith integration for centralized trace storage
+
 ## Development
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, testing, and contribution guidelines.
 
 ```bash
 git clone https://github.com/your-org/conntrail
