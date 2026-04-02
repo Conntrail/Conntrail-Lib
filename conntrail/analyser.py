@@ -4,6 +4,7 @@ DivergenceAnalyser — runs original + 3 contrasts through a node and measures r
 Computes Shannon entropy over the 4 routing outcomes and infers which semantic
 dimension drove the decision (attribution).
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -23,9 +24,9 @@ logger = logging.getLogger("conntrail")
 # The dimension that first flips the route names the attribution.
 # LLM-based open-ended labelling is a Phase 6 enhancement.
 _ATTRIBUTION_LABELS = {
-    "opposite": "semantic intensity",   # core dimension fully inverted → strongest signal
-    "neutral":  "urgency/sentiment",    # stripping emphasis changed the route
-    "similar":  "surface form",         # even a paraphrase flipped the route → very fragile
+    "opposite": "semantic intensity",  # core dimension fully inverted → strongest signal
+    "neutral": "urgency/sentiment",  # stripping emphasis changed the route
+    "similar": "surface form",  # even a paraphrase flipped the route → very fragile
 }
 
 
@@ -37,11 +38,11 @@ class AnalysisResult:
     """
 
     original_route: str
-    contrast_routes: dict[str, str]   # {"similar": route, "neutral": route, "opposite": route}
+    contrast_routes: dict[str, str]  # {"similar": route, "neutral": route, "opposite": route}
     entropy_score: float
     attribution_dimension: str
     counterfactual_route: str | None
-    raw_outputs: dict[str, Any]       # all 4 node outputs keyed by variant name
+    raw_outputs: dict[str, Any]  # all 4 node outputs keyed by variant name
 
 
 class DivergenceAnalyser:
@@ -55,7 +56,7 @@ class DivergenceAnalyser:
       - Non-branching nodes: embed outputs, measure cosine distance (threshold: COSINE_THRESHOLD).
     """
 
-    COSINE_THRESHOLD: float = 0.3   # calibrated in Phase 6
+    COSINE_THRESHOLD: float = 0.3  # calibrated in Phase 6
 
     async def analyse(
         self,
@@ -64,6 +65,7 @@ class DivergenceAnalyser:
         contrast_set: ContrastSet,
         input_key: str = "message",
         route_key: str | None = None,
+        timeout: float = 30.0,
     ) -> AnalysisResult:
         """
         Run all 4 inputs through node_fn concurrently and analyse divergence.
@@ -75,6 +77,7 @@ class DivergenceAnalyser:
             input_key:      Which state key holds the text input (default: "message").
             route_key:      Which output key holds the routing decision.
                             Auto-detected if None.
+            timeout:        Maximum seconds per node call (default: 30.0).
 
         Returns:
             AnalysisResult with entropy_score, attribution_dimension, and
@@ -82,14 +85,14 @@ class DivergenceAnalyser:
         """
         variants: dict[str, dict[str, Any]] = {
             "original": original_input,
-            "similar":  {**original_input, input_key: contrast_set.similar},
-            "neutral":  {**original_input, input_key: contrast_set.neutral},
+            "similar": {**original_input, input_key: contrast_set.similar},
+            "neutral": {**original_input, input_key: contrast_set.neutral},
             "opposite": {**original_input, input_key: contrast_set.opposite},
         }
 
-        # Run all 4 concurrently
+        # Run all 4 concurrently with timeout
         outputs_list = await asyncio.gather(
-            *[self._call_node(node_fn, state) for state in variants.values()]
+            *[self._call_node(node_fn, state, timeout) for state in variants.values()]
         )
         raw_outputs: dict[str, Any] = dict(zip(variants.keys(), outputs_list))
 
@@ -115,28 +118,33 @@ class DivergenceAnalyser:
             raw_outputs=raw_outputs,
         )
 
-    async def _call_node(self, node_fn: Callable, state: dict[str, Any]) -> Any:
+    async def _call_node(self, node_fn: Callable, state: dict[str, Any], timeout: float) -> Any:
         """Call node_fn with automatic retry on rate-limit errors (429).
 
         Parses the provider's retry-after hint when present (e.g. Groq's
         "Please try again in 2m5.3s" message) so retries respect the actual
         window rather than blind exponential backoff.
+
+        Args:
+            node_fn: The node function to call.
+            state: The state dict to pass to the node.
+            timeout: Maximum seconds to wait for the node call.
         """
         max_retries = 4
         for attempt in range(max_retries):
             try:
                 if inspect.iscoroutinefunction(node_fn):
-                    return await node_fn(state)
-                return await asyncio.to_thread(node_fn, state)
+                    return await asyncio.wait_for(node_fn(state), timeout=timeout)
+                return await asyncio.wait_for(asyncio.to_thread(node_fn, state), timeout=timeout)
             except Exception as exc:
                 msg = str(exc)
                 is_rate_limit = (
-                    "429" in msg
-                    or "rate_limit" in msg.lower()
-                    or "rate limit" in msg.lower()
+                    "429" in msg or "rate_limit" in msg.lower() or "rate limit" in msg.lower()
                 )
                 if is_rate_limit and attempt < max_retries - 1:
-                    delay = self._parse_retry_after(msg) or (5.0 * (2 ** attempt) + random.uniform(0, 1))
+                    delay = self._parse_retry_after(msg) or (
+                        5.0 * (2**attempt) + random.uniform(0, 1)
+                    )
                     logger.debug(
                         "conntrail: rate limit on node call (attempt %d), retrying in %.1fs",
                         attempt + 1,

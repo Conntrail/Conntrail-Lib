@@ -1,0 +1,38 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.0.2, pluggy-1.6.0 -- /mnt/stuff-first/Projects/Conntrail-Lib/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /mnt/stuff-first/Projects/Conntrail-Lib
+configfile: pyproject.toml
+plugins: anyio-4.13.0, langsmith-0.7.22, asyncio-1.3.0, mock-3.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=session, asyncio_default_test_loop_scope=function
+collecting ... collected 27 items
+
+tests/test_record.py::TestStabilityLabel::test_zero_entropy_is_confident PASSED [  3%]
+tests/test_record.py::TestStabilityLabel::test_low_entropy_is_confident PASSED [  7%]
+tests/test_record.py::TestStabilityLabel::test_boundary_threshold PASSED [ 11%]
+tests/test_record.py::TestStabilityLabel::test_mid_entropy_is_boundary PASSED [ 14%]
+tests/test_record.py::TestStabilityLabel::test_high_threshold_is_boundary PASSED [ 18%]
+tests/test_record.py::TestStabilityLabel::test_above_threshold_is_fragile PASSED [ 22%]
+tests/test_record.py::TestStabilityLabel::test_max_entropy_is_fragile PASSED [ 25%]
+tests/test_record.py::TestBuildSummary::test_basic_summary PASSED        [ 29%]
+tests/test_record.py::TestBuildSummary::test_summary_no_counterfactual PASSED [ 33%]
+tests/test_record.py::TestTraceRecordSerialization::test_to_dict_returns_dict PASSED [ 37%]
+tests/test_record.py::TestTraceRecordSerialization::test_to_dict_json_serialisable PASSED [ 40%]
+tests/test_record.py::TestTraceRecordSerialization::test_to_dict_all_fields_present PASSED [ 44%]
+tests/test_record.py::TestTraceRecordSerialization::test_to_dict_timestamp_is_isoformat PASSED [ 48%]
+tests/test_record.py::TestTraceRecordSerialization::test_to_dict_raw_contrasts_is_dict PASSED [ 51%]
+tests/test_record.py::TestTraceRecordSerialization::test_to_dict_counterfactual_none PASSED [ 55%]
+tests/test_record.py::TestTraceRecordSerialization::test_to_dict_counterfactual_present PASSED [ 59%]
+tests/test_record.py::TestTraceRecordSerialization::test_from_dict_roundtrip PASSED [ 62%]
+tests/test_record.py::TestTraceRecordSerialization::test_from_dict_roundtrip_with_counterfactual PASSED [ 66%]
+tests/test_record.py::TestStdoutExporter::test_write_does_not_raise PASSED [ 70%]
+tests/test_record.py::TestStdoutExporter::test_write_includes_entropy PASSED [ 74%]
+tests/test_record.py::TestStdoutExporter::test_write_shows_counterfactual PASSED [ 77%]
+tests/test_record.py::TestStdoutExporter::test_write_no_counterfactual_no_alt_line PASSED [ 81%]
+tests/test_record.py::TestJsonlExporter::test_write_creates_file PASSED  [ 85%]
+tests/test_record.py::TestJsonlExporter::test_write_valid_json_line PASSED [ 88%]
+tests/test_record.py::TestJsonlExporter::test_write_appends_multiple_records PASSED [ 92%]
+tests/test_record.py::TestJsonlExporter::test_roundtrip_via_jsonl PASSED [ 96%]
+tests/test_record.py::TestJsonlExporter::test_file_named_with_date PASSED [100%]
+
+============================== 27 passed in 0.49s ==============================

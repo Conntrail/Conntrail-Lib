@@ -3,10 +3,13 @@ JsonlExporter — writes one TraceRecord per line to a local .jsonl file.
 
 Zero external dependencies. Works offline. Safe for production use.
 """
+
 from __future__ import annotations
 
-import os
+import json
 from pathlib import Path
+
+import aiofiles
 
 from conntrail.exporters.base import BaseExporter
 from conntrail.record import TraceRecord
@@ -27,11 +30,9 @@ class JsonlExporter(BaseExporter):
 
     async def write(self, record: TraceRecord) -> None:
         """Append a TraceRecord as a JSON line."""
-        import json
-
         path = self._get_file_path()
-        with path.open("a", encoding="utf-8") as fh:
-            fh.write(json.dumps(record.to_dict()) + "\n")
+        async with aiofiles.open(path, "a", encoding="utf-8") as fh:
+            await fh.write(json.dumps(record.to_dict()) + "\n")
 
     async def close(self) -> None:
         """No-op: file is opened/closed per write for append safety."""

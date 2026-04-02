@@ -1,6 +1,7 @@
 """
 ConntrailConfig — single configuration object passed at setup time.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -32,6 +33,11 @@ class ConntrailConfig:
     export_path: str = "./conntrail_traces"
     entropy_alert_threshold: float = 0.6
     on_alert: Callable | None = field(default=None, repr=False)
+    analysis_timeout: float = 30.0
+    """Timeout in seconds for each node call during contrast analysis.
+
+    Applies to both async and sync node execution paths. If a node call
+    exceeds this timeout, it will be cancelled and raise a TimeoutError."""
 
     def __post_init__(self) -> None:
         if not 0.0 <= self.sample_rate <= 1.0:

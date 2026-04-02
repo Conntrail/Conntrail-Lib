@@ -1,0 +1,111 @@
+======================================================================
+Conntrail Example: Customer Support Agent
+======================================================================
+
+This example shows how Conntrail traces routing decisions
+and alerts on fragile (unstable) decisions.
+
+
+──────────────────────────────────────────────────────────────────────
+Test: Clear Refund Request
+Query: I want a refund for my order. The product arrived damaged.
+Expected: Low entropy (confident decision)
+──────────────────────────────────────────────────────────────────────
+
+
+Result: refund → Refund team: Processing your request about 'I want a refund ...
+
+======================================================================
+
+[1m[CONNTRAIL][0m classify_query | [92m[1mCONFIDENT[0m | entropy=-0.00 | attr: none detected
+  → Route:   refund
+  → Summary: The 'classify_query' node routed to 'refund' with confident confidence (entropy: -0.00). The decision appears to have been driven by none detected in the input.
+
+[1m[CONNTRAIL][0m handle_refund | [91m[1mFRAGILE[0m | entropy=1.00 | attr: semantic intensity
+  → Route:   Refund team: Processing your request about 'I want a refund for my order. The product arrived ...'
+  → Alt:     Refund team: Processing your request about 'I'm just wondering if I can get a refund for my or...'
+  → Summary: The 'handle_refund' node routed to 'Refund team: Processing your request about 'I want a refund for my order. The product arrived ...'' with fragile confidence (entropy: 1.00). The decision appears to have been driven by semantic intensity in the input. If that dimension were removed, the agent would likely have taken the 'Refund team: Processing your request about 'I'm just wondering if I can get a refund for my or...'' path instead.
+
+============================================================
+🚨 ALERT: Fragile Decision Detected!
+============================================================
+Node: handle_refund
+Input: I want a refund for my order. The product arrived damaged....
+Route: Refund team: Processing your request about 'I want a refund for my order. The product arrived ...'
+Entropy Score: 1.000 (threshold: 0.6)
+Stability: fragile
+Attribution: semantic intensity
+============================================================
+
+
+──────────────────────────────────────────────────────────────────────
+Test: Clear Technical Issue
+Query: The app crashes every time I try to save. Getting error code 500.
+Expected: Low entropy (confident decision)
+──────────────────────────────────────────────────────────────────────
+
+
+Result: technical → Tech support: Troubleshooting 'The app crashes every time I ...
+
+======================================================================
+
+[1m[CONNTRAIL][0m handle_technical | [91m[1mFRAGILE[0m | entropy=1.00 | attr: semantic intensity
+  → Route:   Tech support: Troubleshooting 'The app crashes every time I try to save. Getting ...'
+  → Alt:     Tech support: Troubleshooting 'I've noticed the app crashes occasionally when sav...'
+  → Summary: The 'handle_technical' node routed to 'Tech support: Troubleshooting 'The app crashes every time I try to save. Getting ...'' with fragile confidence (entropy: 1.00). The decision appears to have been driven by semantic intensity in the input. If that dimension were removed, the agent would likely have taken the 'Tech support: Troubleshooting 'I've noticed the app crashes occasionally when sav...'' path instead.
+
+============================================================
+🚨 ALERT: Fragile Decision Detected!
+============================================================
+Node: handle_technical
+Input: The app crashes every time I try to save. Getting error code 500....
+Route: Tech support: Troubleshooting 'The app crashes every time I try to save. Getting ...'
+Entropy Score: 1.000 (threshold: 0.6)
+Stability: fragile
+Attribution: semantic intensity
+============================================================
+
+
+[1m[CONNTRAIL][0m classify_query | [92m[1mCONFIDENT[0m | entropy=-0.00 | attr: none detected
+  → Route:   technical
+  → Summary: The 'classify_query' node routed to 'technical' with confident confidence (entropy: -0.00). The decision appears to have been driven by none detected in the input.
+
+──────────────────────────────────────────────────────────────────────
+Test: Ambiguous Query
+Query: I have a problem and need help with something.
+Expected: Higher entropy (uncertain decision - vague input)
+──────────────────────────────────────────────────────────────────────
+
+
+Result: general → Support team: General inquiry about 'I have a problem and ne...
+
+======================================================================
+
+[1m[CONNTRAIL][0m classify_query | [92m[1mCONFIDENT[0m | entropy=-0.00 | attr: none detected
+  → Route:   general
+  → Summary: The 'classify_query' node routed to 'general' with confident confidence (entropy: -0.00). The decision appears to have been driven by none detected in the input.
+
+[1m[CONNTRAIL][0m handle_general | [91m[1mFRAGILE[0m | entropy=0.75 | attr: semantic intensity
+  → Route:   Support team: General inquiry about 'I have a problem and need help with something....'
+  → Alt:     Support team: General inquiry about 'I'm just curious about something and don't really ...'
+  → Summary: The 'handle_general' node routed to 'Support team: General inquiry about 'I have a problem and need help with something....'' with fragile confidence (entropy: 0.75). The decision appears to have been driven by semantic intensity in the input. If that dimension were removed, the agent would likely have taken the 'Support team: General inquiry about 'I'm just curious about something and don't really ...'' path instead.
+
+============================================================
+🚨 ALERT: Fragile Decision Detected!
+============================================================
+Node: handle_general
+Input: I have a problem and need help with something....
+Route: Support team: General inquiry about 'I have a problem and need help with something....'
+Entropy Score: 0.750 (threshold: 0.6)
+Stability: fragile
+Attribution: semantic intensity
+============================================================
+
+
+✅ All tests completed!
+
+Key Takeaways:
+- Clear, specific queries have LOW entropy (stable decisions)
+- Vague, ambiguous queries have HIGH entropy (fragile decisions)
+- The on_alert callback can notify you when models are uncertain
+- Use export_format='jsonl' for audit trails and persistence

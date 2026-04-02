@@ -5,6 +5,7 @@ The hot path is never blocked. The original node call completes and returns
 before contrast analysis begins. Trace results attach to state metadata
 on the next state update cycle.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -15,6 +16,7 @@ from datetime import datetime, timezone
 from typing import Any, Callable
 
 from conntrail.config import ConntrailConfig
+from conntrail.exporters.factory import get_exporter
 
 logger = logging.getLogger("conntrail")
 
@@ -58,7 +60,6 @@ class NodeInterceptor:
         self.input_key = input_key
         self.route_key = route_key
         self.__name__ = node_id  # preserve name for LangGraph introspection
-        self._exporter = None
 
     async def __call__(self, state: dict[str, Any]) -> dict[str, Any]:
         """
@@ -79,9 +80,7 @@ class NodeInterceptor:
                 try:
                     record = await self._build_trace_record(state, output)
                 except Exception as exc:
-                    logger.warning(
-                        "conntrail: analysis failed for node %r: %s", self.node_id, exc
-                    )
+                    logger.warning("conntrail: analysis failed for node %r: %s", self.node_id, exc)
                     record = None
 
                 if record is not None:
@@ -170,10 +169,7 @@ class NodeInterceptor:
             if record is None:
                 return
             await self._get_exporter().write(record)
-            if (
-                self.config.on_alert
-                and record.entropy_score >= self.config.entropy_alert_threshold
-            ):
+            if self.config.on_alert and record.entropy_score >= self.config.entropy_alert_threshold:
                 self.config.on_alert(record)
         except Exception as exc:
             logger.warning("conntrail: analysis failed for node %r: %s", self.node_id, exc)
@@ -209,6 +205,7 @@ class NodeInterceptor:
         """Extract text from the last human message in a LangChain messages list."""
         try:
             from langchain_core.messages import HumanMessage
+
             # Walk backwards to find the most recent human message
             for msg in reversed(messages):
                 if isinstance(msg, HumanMessage) and isinstance(msg.content, str):
@@ -223,17 +220,5 @@ class NodeInterceptor:
         return ""
 
     def _get_exporter(self):
-        """Lazily create and cache the exporter based on config.export_format."""
-        if self._exporter is None:
-            fmt = self.config.export_format
-            if fmt == "stdout":
-                from conntrail.exporters.stdout import StdoutExporter
-                self._exporter = StdoutExporter()
-            elif fmt == "jsonl":
-                from conntrail.exporters.jsonl import JsonlExporter
-                self._exporter = JsonlExporter(self.config.export_path)
-            else:
-                # langsmith — Phase 7, fall back to stdout in the meantime
-                from conntrail.exporters.stdout import StdoutExporter
-                self._exporter = StdoutExporter()
-        return self._exporter
+        """Get the cached exporter from the shared factory."""
+        return get_exporter(self.config)
