@@ -1,0 +1,634 @@
+[
+  {
+    "agent": "customer_support",
+    "method": "scalar",
+    "num_iterations": 10,
+    "trainset_size": 6,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 1.0,
+        "correct": 6,
+        "total": 6,
+        "elapsed_s": 0.89
+      },
+      {
+        "iteration": 2,
+        "accuracy": 1.0,
+        "correct": 6,
+        "total": 6,
+        "elapsed_s": 0.87
+      },
+      {
+        "iteration": 3,
+        "accuracy": 1.0,
+        "correct": 6,
+        "total": 6,
+        "elapsed_s": 0.87
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.8333,
+        "correct": 5,
+        "total": 6,
+        "elapsed_s": 0.95
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.8333,
+        "correct": 5,
+        "total": 6,
+        "elapsed_s": 0.98
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.8333,
+        "correct": 5,
+        "total": 6,
+        "elapsed_s": 0.99
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.8333,
+        "correct": 5,
+        "total": 6,
+        "elapsed_s": 0.97
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.8333,
+        "correct": 5,
+        "total": 6,
+        "elapsed_s": 1.01
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.8333,
+        "correct": 5,
+        "total": 6,
+        "elapsed_s": 1.07
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.8333,
+        "correct": 5,
+        "total": 6,
+        "elapsed_s": 1.03
+      }
+    ],
+    "final_score": 0.8333
+  },
+  {
+    "agent": "customer_support",
+    "method": "critique",
+    "num_iterations": 10,
+    "trainset_size": 6,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 1.0,
+        "correct": 6,
+        "total": 6,
+        "elapsed_s": 0.9
+      },
+      {
+        "iteration": 2,
+        "accuracy": 1.0,
+        "correct": 6,
+        "total": 6,
+        "elapsed_s": 1.01
+      },
+      {
+        "iteration": 3,
+        "accuracy": 1.0,
+        "correct": 6,
+        "total": 6,
+        "elapsed_s": 0.92
+      },
+      {
+        "iteration": 4,
+        "accuracy": 1.0,
+        "correct": 6,
+        "total": 6,
+        "elapsed_s": 0.93
+      },
+      {
+        "iteration": 5,
+        "accuracy": 1.0,
+        "correct": 6,
+        "total": 6,
+        "elapsed_s": 0.95
+      },
+      {
+        "iteration": 6,
+        "accuracy": 1.0,
+        "correct": 6,
+        "total": 6,
+        "elapsed_s": 0.93
+      },
+      {
+        "iteration": 7,
+        "accuracy": 1.0,
+        "correct": 6,
+        "total": 6,
+        "elapsed_s": 0.92
+      },
+      {
+        "iteration": 8,
+        "accuracy": 1.0,
+        "correct": 6,
+        "total": 6,
+        "elapsed_s": 0.89
+      },
+      {
+        "iteration": 9,
+        "accuracy": 1.0,
+        "correct": 6,
+        "total": 6,
+        "elapsed_s": 0.91
+      },
+      {
+        "iteration": 10,
+        "accuracy": 1.0,
+        "correct": 6,
+        "total": 6,
+        "elapsed_s": 0.88
+      }
+    ],
+    "final_score": 1.0
+  },
+  {
+    "agent": "react_agent",
+    "method": "scalar",
+    "num_iterations": 10,
+    "trainset_size": 4,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 4.61
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 3.94
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 3.76
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 3.79
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 4.17
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 5.08
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 4.16
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 5.57
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 4.61
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 5.58
+      }
+    ],
+    "final_score": 0.25
+  },
+  {
+    "agent": "react_agent",
+    "method": "critique",
+    "num_iterations": 10,
+    "trainset_size": 4,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 4.65
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 4.26
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 4.26
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 4.23
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 4.26
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 3.64
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 4.29
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 3.61
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 4.37
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 3.64
+      }
+    ],
+    "final_score": 0.25
+  },
+  {
+    "agent": "multi_agent_supervisor",
+    "method": "scalar",
+    "num_iterations": 10,
+    "trainset_size": 4,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.75
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.72
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.69
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.74
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.75
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.75
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 1.22
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.73
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.76
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 1.84
+      }
+    ],
+    "final_score": 0.25
+  },
+  {
+    "agent": "multi_agent_supervisor",
+    "method": "critique",
+    "num_iterations": 10,
+    "trainset_size": 4,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.69
+      },
+      {
+        "iteration": 2,
+        "accuracy": 1.0,
+        "correct": 4,
+        "total": 4,
+        "elapsed_s": 1.22
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.75
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.78
+      },
+      {
+        "iteration": 5,
+        "accuracy": 1.0,
+        "correct": 4,
+        "total": 4,
+        "elapsed_s": 0.81
+      },
+      {
+        "iteration": 6,
+        "accuracy": 1.0,
+        "correct": 4,
+        "total": 4,
+        "elapsed_s": 0.76
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.74
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.79
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.79
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.78
+      }
+    ],
+    "final_score": 0.75
+  },
+  {
+    "agent": "adaptive_rag",
+    "method": "scalar",
+    "num_iterations": 10,
+    "trainset_size": 4,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.5,
+        "correct": 2,
+        "total": 4,
+        "elapsed_s": 0.72
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 0.74
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.5,
+        "correct": 2,
+        "total": 4,
+        "elapsed_s": 1.08
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.5,
+        "correct": 2,
+        "total": 4,
+        "elapsed_s": 1.09
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.5,
+        "correct": 2,
+        "total": 4,
+        "elapsed_s": 1.09
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 1.78
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 1.41
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 1.45
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.5,
+        "correct": 2,
+        "total": 4,
+        "elapsed_s": 1.14
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 1.84
+      }
+    ],
+    "final_score": 0.25
+  },
+  {
+    "agent": "adaptive_rag",
+    "method": "critique",
+    "num_iterations": 10,
+    "trainset_size": 4,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.5,
+        "correct": 2,
+        "total": 4,
+        "elapsed_s": 0.75
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 2.15
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 3.2
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 1.11
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 1.12
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 1.12
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 1.11
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 1.12
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.75,
+        "correct": 3,
+        "total": 4,
+        "elapsed_s": 1.13
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.25,
+        "correct": 1,
+        "total": 4,
+        "elapsed_s": 2.23
+      }
+    ],
+    "final_score": 0.25
+  }
+]
