@@ -41,14 +41,14 @@ class SupportState(TypedDict):
 
 # ── Nodes ─────────────────────────────────────────────────────────────────────
 
-def _get_llm():
-    from langchain_ollama import ChatOllama
-    return ChatOllama(model="qwen2.5:7b", num_predict=20, temperature=0.0)
+def _get_llm(model=None):
+    from conntrail.utils.providers import get_chat_model
+    return get_chat_model(model or "claude-haiku-4-5-20251001", max_tokens=20)
 
 
-def make_routing_node(holder: PromptHolder):
+def make_routing_node(holder: PromptHolder, model=None):
     async def classify_query(state: SupportState) -> SupportState:
-        llm = _get_llm()
+        llm = _get_llm(model)
         response = await llm.ainvoke([
             SystemMessage(content=holder.system_prompt),
             HumanMessage(content=state["message"]),
@@ -71,11 +71,11 @@ def _route(state: SupportState) -> str:
 
 # ── Graph builder ──────────────────────────────────────────────────────────────
 
-def build_graph(holder: PromptHolder | None = None):
+def build_graph(holder: PromptHolder | None = None, model=None):
     if holder is None:
         holder = PromptHolder()
     builder = StateGraph(SupportState)
-    builder.add_node("classify_query", make_routing_node(holder))
+    builder.add_node("classify_query", make_routing_node(holder, model=model))
     for cat in ("refund", "escalation", "order_info", "general"):
         builder.add_node(f"handle_{cat}", _handle)
         builder.add_edge(f"handle_{cat}", END)
@@ -112,4 +112,27 @@ TRAINSET = [
     {"input": CUSTOMER_SUPPORT_INPUTS[3].text, "expected_route": "refund",      "entropy_category": "boundary"},
     {"input": CUSTOMER_SUPPORT_INPUTS[4].text, "expected_route": "refund",      "entropy_category": "fragile"},
     {"input": CUSTOMER_SUPPORT_INPUTS[5].text, "expected_route": "refund",      "entropy_category": "fragile"},
+]
+
+TRAINSET_LARGE = TRAINSET + [
+    # escalation
+    {"input": "This is completely unacceptable! I want to speak to a manager right now!", "expected_route": "escalation", "entropy_category": "confident"},
+    {"input": "I've been waiting three weeks and nobody is helping me. Get me your supervisor immediately.", "expected_route": "escalation", "entropy_category": "confident"},
+    {"input": "I am furious. If this isn't fixed right now I'm disputing every single charge with my bank.", "expected_route": "escalation", "entropy_category": "confident"},
+    # order_info
+    {"input": "Where is my package? It was supposed to arrive last Tuesday and still nothing.", "expected_route": "order_info", "entropy_category": "confident"},
+    {"input": "Can you give me the tracking number for my most recent shipment?", "expected_route": "order_info", "entropy_category": "confident"},
+    # general
+    {"input": "Do you ship internationally?", "expected_route": "general", "entropy_category": "confident"},
+    {"input": "What is your return policy for unopened items?", "expected_route": "general", "entropy_category": "confident"},
+    {"input": "Do you offer gift wrapping on orders?", "expected_route": "general", "entropy_category": "confident"},
+    {"input": "How do I create an account on your website?", "expected_route": "general", "entropy_category": "confident"},
+    # refund
+    {"input": "I received completely the wrong item in my order. I need a full refund.", "expected_route": "refund", "entropy_category": "confident"},
+    # boundary
+    {"input": "My order hasn't arrived and it's been three weeks. Can I cancel it and get my money back?", "expected_route": "refund", "entropy_category": "boundary"},
+    {"input": "I am extremely upset. Either process my refund immediately or I will dispute this charge.", "expected_route": "escalation", "entropy_category": "boundary"},
+    # fragile
+    {"input": "I'm not sure whether to keep this or return it — it works but it's not quite what I expected.", "expected_route": "refund", "entropy_category": "fragile"},
+    {"input": "Maybe I should send this back... it's okay but not great for the price.", "expected_route": "refund", "entropy_category": "fragile"},
 ]

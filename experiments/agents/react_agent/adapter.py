@@ -30,9 +30,9 @@ class ReactState(TypedDict):
     last_route: str | None   # "call_tool" or "respond" — exposed for Conntrail
 
 
-def _get_llm():
-    from langchain_ollama import ChatOllama
-    return ChatOllama(model="qwen2.5:7b", num_predict=100, temperature=0.0)
+def _get_llm(model=None):
+    from conntrail.utils.providers import get_chat_model
+    return get_chat_model(model or "claude-haiku-4-5-20251001", max_tokens=100)
 
 
 @tool
@@ -50,9 +50,9 @@ def calculator(expression: str) -> str:
 _TOOLS = [calculator]
 
 
-def make_routing_node(holder: PromptHolder):
+def make_routing_node(holder: PromptHolder, model=None):
     async def agent_node(state: ReactState) -> ReactState:
-        llm = _get_llm().bind_tools(_TOOLS)
+        llm = _get_llm(model).bind_tools(_TOOLS)
         response = await llm.ainvoke([
             SystemMessage(content=holder.system_prompt),
             *state["messages"],
@@ -69,7 +69,10 @@ async def tool_node(state: ReactState) -> ReactState:
     from langchain_core.messages import ToolMessage
     msgs = []
     for tc in getattr(last, "tool_calls", []):
-        result = tools_map[tc["name"]].invoke(tc["args"]) if tc["name"] in tools_map else "Tool not found"
+        try:
+            result = tools_map[tc["name"]].invoke(tc["args"]) if tc["name"] in tools_map else "Tool not found"
+        except Exception as e:
+            result = f"Tool error: {e}"
         msgs.append(ToolMessage(content=str(result), tool_call_id=tc["id"]))
     return {"messages": msgs, "last_route": state.get("last_route")}
 
@@ -82,11 +85,11 @@ def _should_use_tool(state: ReactState) -> str:
     return state.get("last_route") or "respond"
 
 
-def build_graph(holder: PromptHolder | None = None):
+def build_graph(holder: PromptHolder | None = None, model=None):
     if holder is None:
         holder = PromptHolder()
     builder = StateGraph(ReactState)
-    builder.add_node("agent_node", make_routing_node(holder))
+    builder.add_node("agent_node", make_routing_node(holder, model=model))
     builder.add_node("call_tool", tool_node)
     builder.add_node("respond", respond_node)
     builder.add_edge(START, "agent_node")
@@ -120,4 +123,27 @@ TRAINSET = [
     {"input": "What is the capital of France?",      "expected_route": "respond",   "entropy_category": "confident"},
     {"input": "What is 15 percent of 240?",          "expected_route": "call_tool", "entropy_category": "boundary"},
     {"input": "What is 2 to the power of 10?",       "expected_route": "call_tool", "entropy_category": "fragile"},
+]
+
+TRAINSET_LARGE = TRAINSET + [
+    # confident call_tool
+    {"input": "What is 847 divided by 13?",                              "expected_route": "call_tool", "entropy_category": "confident"},
+    {"input": "Calculate a 15% tip on a $85.40 bill.",                   "expected_route": "call_tool", "entropy_category": "confident"},
+    {"input": "What is 17 factorial?",                                   "expected_route": "call_tool", "entropy_category": "confident"},
+    {"input": "Convert 98.6 degrees Fahrenheit to Celsius.",             "expected_route": "call_tool", "entropy_category": "confident"},
+    # confident respond
+    {"input": "What is the speed of light in a vacuum?",                 "expected_route": "respond",   "entropy_category": "confident"},
+    {"input": "Who wrote Pride and Prejudice?",                          "expected_route": "respond",   "entropy_category": "confident"},
+    {"input": "What is the tallest mountain in the world?",              "expected_route": "respond",   "entropy_category": "confident"},
+    {"input": "What programming language was Python named after?",       "expected_route": "respond",   "entropy_category": "confident"},
+    {"input": "Explain what machine learning is in simple terms.",       "expected_route": "respond",   "entropy_category": "confident"},
+    {"input": "What is the capital of Australia?",                       "expected_route": "respond",   "entropy_category": "confident"},
+    # boundary
+    {"input": "How many seconds are in a year?",                         "expected_route": "call_tool", "entropy_category": "boundary"},
+    {"input": "What is 2 to the power of 16?",                          "expected_route": "call_tool", "entropy_category": "boundary"},
+    # fragile
+    {"input": "Is 1729 a special number in mathematics?",               "expected_route": "respond",   "entropy_category": "fragile"},
+    {"input": "Approximately how many prime numbers are below 100?",     "expected_route": "call_tool", "entropy_category": "fragile"},
+    {"input": "How many days are left in the current year?",             "expected_route": "call_tool", "entropy_category": "fragile"},
+    {"input": "What is roughly 1000 euros in US dollars?",               "expected_route": "respond",   "entropy_category": "fragile"},
 ]

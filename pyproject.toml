@@ -31,6 +31,7 @@ dependencies = [
     "langchain-anthropic>=1.4.0",
     "openai>=2.30.0",
     "langchain-openai>=1.1.12",
+    "reportlab>=4.5.1",
 ]
 
 [project.optional-dependencies]

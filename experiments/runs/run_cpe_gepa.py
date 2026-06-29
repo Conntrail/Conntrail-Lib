@@ -1,14 +1,12 @@
 """
 CPE-GEPA optimization experiment.
 
-Runs a GEPA-style prompt optimization loop for each of the four Conntrail
-test agents. CPE entropy scores from TraceCollector become the feedback
-signal used by an LLM to improve the routing system prompt each iteration.
-
-No dspy dependency — the optimization loop is implemented directly.
+Runs a GEPA-style prompt optimization loop for each agent. CPE entropy scores
+from TraceCollector become the feedback signal used by Sonnet to improve the
+routing system prompt each iteration.
 
 Usage:
-    python -m experiments.runs.run_cpe_gepa --agents all --iterations 10 \\
+    python -m experiments.runs.run_cpe_gepa --agents all --iterations 10 --runs 3 \\
         --out experiments/results/cpe_gepa.json
 """
 from __future__ import annotations
@@ -17,27 +15,18 @@ import argparse
 import asyncio
 import json
 import logging
+import statistics
 import time
 import traceback
 from pathlib import Path
 
 from dotenv import load_dotenv
 
+load_dotenv()  # picks up ANTHROPIC_API_KEY from root .env
 load_dotenv(Path(__file__).parent.parent.parent / "testing" / ".env")
 
-# ── Patch Conntrail's provider factory to support Ollama ──────────────────────
-import conntrail.utils.providers as _conntrail_providers  # noqa: E402
-from langchain_ollama import ChatOllama as _ChatOllama      # noqa: E402
-
-_orig_get_chat_model = _conntrail_providers.get_chat_model
-def _patched_get_chat_model(model, *, max_tokens=512, temperature=0.0):
-    if model.startswith("ollama:"):
-        return _ChatOllama(model=model[7:], num_predict=max_tokens, temperature=temperature)
-    return _orig_get_chat_model(model, max_tokens=max_tokens, temperature=temperature)
-_conntrail_providers.get_chat_model = _patched_get_chat_model
-# ─────────────────────────────────────────────────────────────────────────────
-
 from langchain_core.messages import HumanMessage, SystemMessage  # noqa: E402
+from tqdm import tqdm  # noqa: E402
 
 from conntrail import ConntrailConfig, trace_graph  # noqa: E402
 from conntrail.gepa.bridge import TraceCollector  # noqa: E402
@@ -45,6 +34,21 @@ from conntrail.gepa.feedback import cpe_feedback  # noqa: E402
 
 logging.basicConfig(level=logging.WARNING)
 log = logging.getLogger("cpe_gepa")
+
+ERROR_LOG = Path("experiments/results/errors.log")
+
+EXPERIMENT_CONFIG = {
+    "optimization_loop": "custom_gepa_implementation",
+    "router_model": "claude-haiku-4-5-20251001",
+    "contrast_model": "claude-haiku-4-5-20251001",
+    "prompt_gen_model": "claude-sonnet-4-6",
+    "router_temperature": 0.0,
+    "prompt_gen_temperature": 0.3,
+    "note_on_variance": (
+        "temperature=0.3 on prompt generator produces genuine trajectory variance "
+        "across runs; router temperature=0.0 ensures deterministic routing decisions"
+    ),
+}
 
 # ── Prompt evolution ───────────────────────────────────────────────────────────
 
@@ -89,31 +93,37 @@ async def generate_next_prompt(
     return response.content.strip()
 
 
-# ── Core loop ─────────────────────────────────────────────────────────────────
+def _get_llm(model: str = "claude-sonnet-4-6"):
+    from conntrail.utils.providers import get_chat_model
+    # temperature=0.3 so multiple runs produce different optimization trajectories
+    return get_chat_model(model, max_tokens=1024, temperature=0.3)
 
-def _get_llm():
-    return _ChatOllama(model="qwen2.5:7b", num_predict=1024, temperature=0.0)
+
+def _log_error(msg: str) -> None:
+    ERROR_LOG.parent.mkdir(parents=True, exist_ok=True)
+    with open(ERROR_LOG, "a") as f:
+        f.write(f"[{time.strftime('%Y-%m-%dT%H:%M:%S')}] {msg}\n")
 
 
-async def run_agent_cpe_gepa(
+# ── Single optimization pass ───────────────────────────────────────────────────
+
+async def _run_single(
     name: str,
     adapter,
     num_iterations: int,
-) -> dict:
-    print(f"\n{'='*60}")
-    print(f"CPE-GEPA: {name}  ({num_iterations} iterations)")
-    print(f"{'='*60}")
+    router_model: str = "claude-haiku-4-5-20251001",
+    contrast_model: str = "claude-haiku-4-5-20251001",
+    prompt_gen_model: str = "claude-sonnet-4-6",
+) -> tuple[list[dict], int]:
+    """One optimization pass from DEFAULT_SYSTEM_PROMPT. Returns (iteration_results, trainset_size)."""
+    trainset = getattr(adapter, "TRAINSET_LARGE", adapter.TRAINSET)
 
-    trainset = adapter.TRAINSET
     prompt_holder = adapter.PromptHolder()
+    raw_graph = adapter.build_graph(prompt_holder, model=router_model)
 
-    # Build graph once; swap prompt via holder each iteration
-    raw_graph = adapter.build_graph(prompt_holder)
-
-    # Conntrail config: collect every trace synchronously
     collector = TraceCollector()
     conntrail_cfg = collector.make_config(ConntrailConfig(
-        contrast_model="ollama:qwen2.5:7b",   # local Ollama — no rate limits
+        contrast_model=contrast_model,
         sample_rate=1.0,
         entropy_alert_threshold=0.0,
         async_mode=False,
@@ -128,29 +138,29 @@ async def run_agent_cpe_gepa(
         only_nodes=adapter.ONLY_NODES,
     )
 
-    llm = _get_llm()
     current_prompt = adapter.DEFAULT_SYSTEM_PROMPT
-
     iteration_results = []
 
-    for i in range(num_iterations):
+    iter_bar = tqdm(range(num_iterations), desc=f"  {name}", unit="iter", leave=True)
+    for i in iter_bar:
         iter_start = time.time()
-        print(f"\n  Iteration {i+1}/{num_iterations} — prompt hash {hash(current_prompt) % 9999:04d}")
 
         prompt_holder.system_prompt = current_prompt
         collector.begin_attempt(current_prompt)
 
         correct = 0
-        for ex in trainset:
+        ex_bar = tqdm(trainset, desc=f"    iter {i+1}", unit="ex", leave=False)
+        for ex in ex_bar:
             state = adapter.make_initial_state(ex["input"])
             try:
                 result = await instrumented.ainvoke(state)
                 got = adapter.get_result_route(result)
                 if got == ex["expected_route"]:
                     correct += 1
-                print(f"    [{ex['entropy_category']:9s}] got={got:15s} expected={ex['expected_route']}")
+                ex_bar.set_postfix(got=got[:12], ok="✓" if got == ex["expected_route"] else "✗")
             except Exception as exc:
-                print(f"    ERROR on example: {exc}")
+                tqdm.write(f"      ERROR on example: {exc}")
+                _log_error(f"{name} iter {i+1} example error: {exc}")
 
         accuracy = correct / len(trainset) if trainset else 0.0
         record = collector.end_attempt(scalar_score=accuracy)
@@ -159,10 +169,14 @@ async def run_agent_cpe_gepa(
         feedback_str = cpe_feedback(record)
 
         entropy_str = f"{mean_e:.3f}" if mean_e is not None else "N/A"
-        print(f"  → accuracy={accuracy:.0%}  entropy={entropy_str}  "
-              f"fragile={record.fragile_count}  boundary={record.boundary_count}")
+        iter_bar.set_postfix(acc=f"{accuracy:.0%}", entropy=entropy_str,
+                             fragile=record.fragile_count, boundary=record.boundary_count)
+        tqdm.write(f"  iter {i+1:2d}/{num_iterations} — acc={accuracy:.0%}  "
+                   f"entropy={entropy_str}  fragile={record.fragile_count}  "
+                   f"boundary={record.boundary_count}  "
+                   f"elapsed={time.time()-iter_start:.0f}s")
 
-        iter_result = {
+        iteration_results.append({
             "iteration": i + 1,
             "prompt_candidate": current_prompt[:120] + ("..." if len(current_prompt) > 120 else ""),
             "accuracy": round(accuracy, 4),
@@ -175,27 +189,91 @@ async def run_agent_cpe_gepa(
             "num_traces": len(record.traces),
             "dominant_attribution": record.dominant_attribution,
             "elapsed_s": round(time.time() - iter_start, 2),
-        }
-        iteration_results.append(iter_result)
+        })
 
-        # Generate improved prompt for next iteration (skip on last)
         if i < num_iterations - 1:
             try:
+                llm = _get_llm(prompt_gen_model)  # fresh token right before use
                 current_prompt = await generate_next_prompt(
                     llm, current_prompt, accuracy, correct, len(trainset),
                     feedback_str, i + 1,
                 )
             except Exception as exc:
-                print(f"  Prompt generation failed: {exc} — reusing current prompt")
+                tqdm.write(f"    Prompt generation failed: {exc} — reusing current prompt")
+                _log_error(f"{name} iter {i+1} prompt gen error: {exc}")
+
+    return iteration_results, len(trainset)
+
+
+# ── Multi-run wrapper ──────────────────────────────────────────────────────────
+
+async def run_agent_cpe_gepa(
+    name: str,
+    adapter,
+    num_iterations: int,
+    num_runs: int,
+    router_model: str = "claude-haiku-4-5-20251001",
+    contrast_model: str = "claude-haiku-4-5-20251001",
+    prompt_gen_model: str = "claude-sonnet-4-6",
+) -> dict:
+    print(f"\n{'='*60}")
+    print(f"CPE-GEPA: {name}  ({num_iterations} iterations × {num_runs} runs)")
+    print(f"  router={router_model}  contrast={contrast_model}  prompt_gen={prompt_gen_model}")
+    print(f"{'='*60}")
+
+    all_run_scores: list[list[float]] = []
+    last_iteration_results: list[dict] = []
+    trainset_size = 0
+
+    for run_idx in range(num_runs):
+        tqdm.write(f"\n  ── Run {run_idx + 1}/{num_runs} ──")
+        try:
+            iteration_results, trainset_size = await _run_single(
+                name, adapter, num_iterations,
+                router_model=router_model,
+                contrast_model=contrast_model,
+                prompt_gen_model=prompt_gen_model,
+            )
+            scores = [it["accuracy"] for it in iteration_results]
+            all_run_scores.append(scores)
+            last_iteration_results = iteration_results
+        except Exception as exc:
+            msg = f"CPE-GEPA {name} run {run_idx + 1}: {traceback.format_exc()}"
+            tqdm.write(f"\n  ERROR: {exc}")
+            _log_error(msg)
+
+    if not all_run_scores:
+        return {"agent": name, "method": "cpe_gepa", "error": "all runs failed"}
+
+    final_scores = [scores[-1] for scores in all_run_scores]
+    best_scores = [max(scores) for scores in all_run_scores]
+
+    mean_final = statistics.mean(final_scores)
+    std_final = statistics.stdev(final_scores) if len(final_scores) > 1 else 0.0
+    mean_best = statistics.mean(best_scores)
+
+    config = {
+        **EXPERIMENT_CONFIG,
+        "router_model": router_model,
+        "contrast_model": contrast_model,
+        "prompt_gen_model": prompt_gen_model,
+        "num_runs": num_runs,
+        "random_seed": 42,
+    }
 
     return {
         "agent": name,
         "method": "cpe_gepa",
+        "num_runs": num_runs,
         "num_iterations": num_iterations,
-        "trainset_size": len(trainset),
-        "iterations": iteration_results,
-        "final_score": iteration_results[-1]["accuracy"] if iteration_results else None,
-        "final_entropy": iteration_results[-1]["mean_entropy"] if iteration_results else None,
+        "trainset_size": trainset_size,
+        "iterations": last_iteration_results,
+        "scores_per_run": all_run_scores,
+        "final_score": round(mean_final, 4),
+        "final_score_mean": round(mean_final, 4),
+        "final_score_std": round(std_final, 4),
+        "best_score_mean": round(mean_best, 4),
+        "experiment_config": config,
     }
 
 
@@ -206,29 +284,72 @@ AGENT_MODULES = {
     "react_agent":            "experiments.agents.react_agent.adapter",
     "multi_agent_supervisor": "experiments.agents.multi_agent_supervisor.adapter",
     "adaptive_rag":           "experiments.agents.adaptive_rag.adapter",
+    "document_triage":        "experiments.agents.document_triage.adapter",
+    "code_review":            "experiments.agents.code_review.adapter",
+    "medical_triage":         "experiments.agents.medical_triage.adapter",
+    "financial_query":        "experiments.agents.financial_query.adapter",
+    "mental_health_triage":   "experiments.agents.mental_health_triage.adapter",
+    "content_moderation":     "experiments.agents.content_moderation.adapter",
 }
 
 
-async def main(agents: list[str], iterations: int, out: str) -> None:
+_LOCAL_MODEL = "local"  # resolves to LOCAL_MODEL_NAME env var = full model ID
+
+async def main(
+    agents: list[str],
+    iterations: int,
+    runs: int,
+    out: str,
+    resume: bool = False,
+    local: bool = False,
+    router_model: str | None = None,
+    contrast_model: str | None = None,
+    prompt_gen_model: str | None = None,
+) -> None:
     import importlib
 
+    # Model resolution: explicit flags > --local shortcut > Anthropic defaults
+    r_model  = router_model      or (_LOCAL_MODEL if local else "claude-haiku-4-5-20251001")
+    c_model  = contrast_model    or (_LOCAL_MODEL if local else "claude-haiku-4-5-20251001")
+    pg_model = prompt_gen_model  or (_LOCAL_MODEL if local else "claude-sonnet-4-6")
+
+    if local:
+        print(f"[LOCAL MODE] router={r_model}  contrast={c_model}  prompt_gen={pg_model}\n")
+
+    out_path = Path(out)
     results = []
+    if resume and out_path.exists():
+        existing = json.loads(out_path.read_text())
+        results = [r for r in existing if "error" not in r]
+        completed = {r["agent"] for r in results}
+        agents = [a for a in agents if a not in completed]
+        print(f"Resuming — already done: {sorted(completed)}")
+        print(f"Still to run: {agents}\n")
+
     for name in agents:
         if name not in AGENT_MODULES:
             print(f"Unknown agent {name!r}, skipping.")
             continue
         try:
             adapter = importlib.import_module(AGENT_MODULES[name])
-            result = await run_agent_cpe_gepa(name, adapter, iterations)
+            result = await run_agent_cpe_gepa(
+                name, adapter, iterations, runs,
+                router_model=r_model,
+                contrast_model=c_model,
+                prompt_gen_model=pg_model,
+            )
             results.append(result)
         except Exception:
+            msg = f"CPE-GEPA outer error for {name}: {traceback.format_exc()}"
             print(f"\nERROR running {name}:")
             traceback.print_exc()
+            _log_error(msg)
             results.append({"agent": name, "method": "cpe_gepa", "error": traceback.format_exc()})
 
-    out_path = Path(out)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(results, indent=2))
+        # Incremental save after each agent
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(json.dumps(results, indent=2))
+
     print(f"\nResults → {out_path}")
 
 
@@ -236,7 +357,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--agents", default="all")
     parser.add_argument("--iterations", type=int, default=10)
+    parser.add_argument("--runs", type=int, default=3,
+                        help="Number of independent optimization runs for variance estimation")
     parser.add_argument("--out", default="experiments/results/cpe_gepa.json")
+    parser.add_argument("--resume", action="store_true",
+                        help="Skip agents that already have a successful result in --out")
+    parser.add_argument("--local", action="store_true",
+                        help="Use local Qwen3 model (http://127.0.0.1:8888) for all LLM calls")
+    parser.add_argument("--router-model",  default=None, help="Override router model")
+    parser.add_argument("--contrast-model", default=None, help="Override contrast model")
+    parser.add_argument("--prompt-gen-model", default=None, help="Override prompt generation model")
     args = parser.parse_args()
 
     targets = (
@@ -244,4 +374,11 @@ if __name__ == "__main__":
         if args.agents == "all"
         else [a.strip() for a in args.agents.split(",")]
     )
-    asyncio.run(main(targets, args.iterations, args.out))
+    asyncio.run(main(
+        targets, args.iterations, args.runs, args.out,
+        resume=args.resume,
+        local=args.local,
+        router_model=args.router_model,
+        contrast_model=args.contrast_model,
+        prompt_gen_model=args.prompt_gen_model,
+    ))

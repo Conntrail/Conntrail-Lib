@@ -1,0 +1,1730 @@
+[
+  {
+    "agent": "customer_support",
+    "method": "scalar",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.95,
+        "correct": 19,
+        "total": 20,
+        "elapsed_s": 22.36
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.7,
+        "correct": 14,
+        "total": 20,
+        "elapsed_s": 17.95
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.75,
+        "correct": 15,
+        "total": 20,
+        "elapsed_s": 27.43
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.8,
+        "correct": 16,
+        "total": 20,
+        "elapsed_s": 16.97
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.7,
+        "correct": 14,
+        "total": 20,
+        "elapsed_s": 15.73
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.75,
+        "correct": 15,
+        "total": 20,
+        "elapsed_s": 18.82
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.75,
+        "correct": 15,
+        "total": 20,
+        "elapsed_s": 20.61
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.75,
+        "correct": 15,
+        "total": 20,
+        "elapsed_s": 19.96
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.75,
+        "correct": 15,
+        "total": 20,
+        "elapsed_s": 16.07
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.9,
+        "correct": 18,
+        "total": 20,
+        "elapsed_s": 20.57
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.95,
+        0.7,
+        0.75,
+        0.8,
+        0.7,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.9
+      ]
+    ],
+    "final_score": 0.9,
+    "final_score_mean": 0.9,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.95,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "customer_support",
+    "method": "critique",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.95,
+        "correct": 19,
+        "total": 20,
+        "elapsed_s": 15.03
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.7,
+        "correct": 14,
+        "total": 20,
+        "elapsed_s": 16.75
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.95,
+        "correct": 19,
+        "total": 20,
+        "elapsed_s": 17.8
+      },
+      {
+        "iteration": 4,
+        "accuracy": 1.0,
+        "correct": 20,
+        "total": 20,
+        "elapsed_s": 17.08
+      },
+      {
+        "iteration": 5,
+        "accuracy": 1.0,
+        "correct": 20,
+        "total": 20,
+        "elapsed_s": 15.96
+      },
+      {
+        "iteration": 6,
+        "accuracy": 1.0,
+        "correct": 20,
+        "total": 20,
+        "elapsed_s": 15.69
+      },
+      {
+        "iteration": 7,
+        "accuracy": 1.0,
+        "correct": 20,
+        "total": 20,
+        "elapsed_s": 15.93
+      },
+      {
+        "iteration": 8,
+        "accuracy": 1.0,
+        "correct": 20,
+        "total": 20,
+        "elapsed_s": 17.62
+      },
+      {
+        "iteration": 9,
+        "accuracy": 1.0,
+        "correct": 20,
+        "total": 20,
+        "elapsed_s": 15.46
+      },
+      {
+        "iteration": 10,
+        "accuracy": 1.0,
+        "correct": 20,
+        "total": 20,
+        "elapsed_s": 17.18
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.95,
+        0.7,
+        0.95,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "final_score": 1.0,
+    "final_score_mean": 1.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 1.0,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "react_agent",
+    "method": "scalar",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 42.43
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 40.84
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 43.19
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 47.72
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 45.17
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 37.17
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 42.02
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 40.7
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 43.24
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 48.74
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.45,
+        0.45,
+        0.45,
+        0.45,
+        0.45,
+        0.45,
+        0.45,
+        0.45,
+        0.45,
+        0.45
+      ]
+    ],
+    "final_score": 0.45,
+    "final_score_mean": 0.45,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.45,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "react_agent",
+    "method": "critique",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 41.33
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 45.7
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 36.61
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 40.38
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 38.41
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 39.6
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 37.1
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 37.36
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.45,
+        "correct": 9,
+        "total": 20,
+        "elapsed_s": 42.14
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.79
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.45,
+        0.45,
+        0.45,
+        0.45,
+        0.45,
+        0.45,
+        0.45,
+        0.45,
+        0.45,
+        0.0
+      ]
+    ],
+    "final_score": 0.0,
+    "final_score_mean": 0.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.45,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "multi_agent_supervisor",
+    "method": "scalar",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.32
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.22
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.29
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.4
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.37
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.87
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.38
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.29
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 7.69
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.49
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "final_score": 0.0,
+    "final_score_mean": 0.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.0,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "multi_agent_supervisor",
+    "method": "critique",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 7.06
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.46
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.61
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.2
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.3
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.45
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.19
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.72
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.49
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.49
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "final_score": 0.0,
+    "final_score_mean": 0.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.0,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "adaptive_rag",
+    "method": "scalar",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.21
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.25
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.3
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.84
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 10.03
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.25
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.7
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 7.0
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.24
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.3
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "final_score": 0.0,
+    "final_score_mean": 0.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.0,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "adaptive_rag",
+    "method": "critique",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 7.14
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.3
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 7.54
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.49
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 7.64
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 7.0
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.78
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.27
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.79
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.07
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "final_score": 0.0,
+    "final_score_mean": 0.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.0,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "document_triage",
+    "method": "scalar",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.34
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.44
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.33
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 7.83
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.22
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.71
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.41
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.58
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 9.48
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 10.01
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "final_score": 0.0,
+    "final_score_mean": 0.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.0,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "document_triage",
+    "method": "critique",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.75
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.1
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 7.46
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 9.51
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.81
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.26
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.75
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.09
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.4
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.6
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "final_score": 0.0,
+    "final_score_mean": 0.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.0,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "code_review",
+    "method": "scalar",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.43
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.37
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.3
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.73
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.42
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.35
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 9.67
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.88
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.66
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.77
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "final_score": 0.0,
+    "final_score_mean": 0.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.0,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "code_review",
+    "method": "critique",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.59
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.26
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 7.25
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.64
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.46
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.22
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.89
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.22
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.28
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.47
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "final_score": 0.0,
+    "final_score_mean": 0.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.0,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "medical_triage",
+    "method": "scalar",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 24,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 7.94
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 7.67
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 7.98
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 8.54
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 7.54
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 7.91
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 8.03
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 7.93
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 8.11
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 8.14
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "final_score": 0.0,
+    "final_score_mean": 0.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.0,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "medical_triage",
+    "method": "critique",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 24,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 7.98
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 7.68
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 8.45
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 7.59
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 7.96
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 8.25
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 8.08
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 7.3
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 7.94
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 24,
+        "elapsed_s": 7.6
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "final_score": 0.0,
+    "final_score_mean": 0.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.0,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "financial_query",
+    "method": "scalar",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.66
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.79
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.46
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.53
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.21
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.34
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 8.66
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.27
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.71
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.3
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "final_score": 0.0,
+    "final_score_mean": 0.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.0,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  },
+  {
+    "agent": "financial_query",
+    "method": "critique",
+    "num_runs": 1,
+    "num_iterations": 10,
+    "trainset_size": 20,
+    "iterations": [
+      {
+        "iteration": 1,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.64
+      },
+      {
+        "iteration": 2,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.15
+      },
+      {
+        "iteration": 3,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.99
+      },
+      {
+        "iteration": 4,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.65
+      },
+      {
+        "iteration": 5,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.28
+      },
+      {
+        "iteration": 6,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 7.02
+      },
+      {
+        "iteration": 7,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 7.56
+      },
+      {
+        "iteration": 8,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.29
+      },
+      {
+        "iteration": 9,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 7.0
+      },
+      {
+        "iteration": 10,
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 20,
+        "elapsed_s": 6.78
+      }
+    ],
+    "scores_per_run": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "final_score": 0.0,
+    "final_score_mean": 0.0,
+    "final_score_std": 0.0,
+    "best_score_mean": 0.0,
+    "experiment_config": {
+      "optimization_loop": "custom_gepa_implementation",
+      "router_model": "claude-haiku-4-5-20251001",
+      "contrast_model": "n/a (baselines do not use CPE contrast)",
+      "prompt_gen_model": "claude-sonnet-4-6",
+      "router_temperature": 0.0,
+      "prompt_gen_temperature": 0.3,
+      "note_on_variance": "temperature=0.3 on prompt generator produces genuine trajectory variance across runs; router temperature=0.0 ensures deterministic routing decisions",
+      "num_runs": 1,
+      "random_seed": 42
+    }
+  }
+]
